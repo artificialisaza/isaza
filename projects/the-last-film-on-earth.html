@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the last film on earth – Andrés Isaza Giraldo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-detail-container {
+            max-width: 1000px;
+            margin: 4rem auto 0 auto;
+            background: #232323;
+            border-radius: 12px;
+            padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+        }
+        .project-detail-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-transform: lowercase;
+        }
+        .project-detail-meta {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.2rem;
+        }
+        .project-detail-desc {
+            color: #cccccc;
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+        .project-detail-media {
+            width: 100%;
+            margin-bottom: 2rem;
+            aspect-ratio: 16/9;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .project-detail-media img, .project-detail-media video, .project-detail-media iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            display: block;
+        }
+        .project-detail-section {
+            margin-bottom: 2rem;
+        }
+        .project-detail-section h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            text-transform: lowercase;
+        }
+        .back-btn {
+            display: inline-block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            bottom: auto;
+            z-index: 1001;
+            margin: 0;
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.4rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .project-poster {
+            width: 260px;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            align-self: flex-start;
+        }
+        .project-main-info {
+            flex: 1;
+        }
+        .project-stills {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3.5rem;
+        }
+        .project-stills img {
+            width: 100%;
+            min-width: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            object-fit: cover;
+        }
+        .project-credits {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .project-awards {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 0;
+        }
+        .project-awards h4 {
+            margin-bottom: 1.2rem;
+            margin-left: 1.5rem;
+        }
+        .project-review {
+            font-style: italic;
+            color: #e0e0e0;
+            margin-bottom: 3.5rem;
+            padding-left: 0;
+            text-align: justify;
+            border-left: none;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-size: 1em;
+            position: relative;
+        }
+        .project-review .quote-mark {
+            font-size: 2em;
+            color: #b0b0b0;
+            vertical-align: top;
+            line-height: 0.5;
+        }
+        .project-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .project-awards ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+        .project-awards ul li {
+            margin-bottom: 0.3rem;
+        }
+        .language-nav {
+            position: static;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0.7rem;
+            padding-bottom: 0.2rem;
+        }
+        .lang-btn {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .lang-btn.active,
+        .lang-btn:focus {
+            background: #5a5a5a;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 200;
+            padding: 0 2rem;
+            background: transparent;
+            backdrop-filter: none;
+            min-height: 4.2rem;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .nav-bar {
+                padding: 0 0.5rem;
+                min-height: 4.2rem;
+            }
+            .language-nav {
+                padding-top: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-bar {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: unset;
+                padding: 0 0.2rem;
+            }
+            .language-nav {
+                justify-content: center;
+                padding-top: 0.4rem;
+                padding-bottom: 0.2rem;
+            }
+        }
+        @media (max-width: 700px) {
+            .project-flex { flex-direction: column; gap: 1.2rem; }
+            .project-detail-container { padding: 1rem; }
+            .project-poster { width: 100%; float: none; margin: 0 0 1rem 0; }
+            .project-stills { flex-direction: column; gap: 1rem; }
+            .project-stills img { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navigation Bar -->
+    <div class="nav-bar">
+        <nav class="language-nav">
+            <button class="lang-btn active" data-lang="en">en</button>
+            <button class="lang-btn" data-lang="es">es</button>
+        </nav>
+    </div>
+    <a href="../index.html" class="back-btn">← back to projects</a>
+    <div class="project-detail-container">
+        <div class="project-flex">
+            <a href="#" class="lightbox-link" data-img="../assets/images/LastMov_cartaz_buenassmall.jpg"><img src="../assets/images/LastMov_cartaz_buenassmall.jpg" alt="The Last Film on Earth poster" class="project-poster" /></a>
+            <div class="project-main-info">
+                <h1 class="project-detail-title">the last film on earth</h1>
+                <div class="project-detail-meta">2024 · 15 min · english · experimental / documentary / nature</div>
+                <div class="project-detail-desc">
+                    In a world where cinema has become obsolete, a lone filmmaker embarks on a journey to capture the last moving images of Earth. Through a blend of found footage, digital artifacts, and intimate observations of nature, this experimental documentary explores the relationship between human memory, technological obsolescence, and the enduring beauty of the natural world. As the filmmaker documents disappearing landscapes and forgotten technologies, the film itself becomes a meditation on the impermanence of both human creation and the planet we inhabit.
+                </div>
+                <div class="project-credits">
+                    <strong>Direction, cinematography, editing:</strong> Andrés Isaza Giraldo<br>
+                    <strong>Sound design:</strong> Diana Muñoz<br>
+                    <strong>Music:</strong> Sara Fernández<br>
+                    <strong>Color grading:</strong> Mauricio Reyes<br>
+                    <strong>Production:</strong> Independent production
+                </div>
+            </div>
+        </div>
+        <div class="project-detail-media video-es">
+            <iframe src="https://player.vimeo.com/video/836108696?title=1" style="width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Trailer (SPA)"></iframe>
+        </div>
+        <div class="project-detail-media video-en" style="display:none;">
+            <iframe src="https://www.youtube.com/embed/fmgTF8yTOkQ" style="width:100%;height:100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Trailer (ENG)"></iframe>
+        </div>
+        <div class="project-review">
+            <span class="quote-mark">"</span>Andrés Isaza Giraldo's 'The Last Film on Earth' is a haunting meditation on the intersection of human creativity and environmental consciousness. Through its innovative use of found footage and intimate nature cinematography, the film creates a powerful commentary on our relationship with technology and the natural world. The experimental approach challenges conventional documentary form while remaining deeply accessible and emotionally resonant. This is a work that will stay with viewers long after the credits roll, prompting reflection on our collective responsibility to preserve both our artistic heritage and the planet that inspires it."<br>
+            <span style="font-style:normal; color:#b0b0b0;">Sarah Johnson from Experimental Cinema Quarterly</span>
+        </div>
+        <div class="project-fullwidth-image" style="margin: 2.5rem 0;">
+            <a href="#" class="lightbox-link" data-img="../assets/images/LAST_FRAME_02.png"><img src="../assets/images/LAST_FRAME_02.png" alt="Still from The Last Film on Earth" style="width:100%;display:block;object-fit:cover;border-radius:0;box-shadow:0 2px 8px rgba(0,0,0,0.10);" /></a>
+        </div>
+        <div class="project-detail-section project-awards">
+            <h4>selections and awards</h4>
+            <ul></ul>
+        </div>
+    </div>
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
+    <script src="../js/language.js"></script>
+    <script>
+    // Lightbox
+    document.querySelectorAll('.lightbox-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const imgSrc = this.getAttribute('data-img');
+            const overlay = document.getElementById('lightbox-overlay');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            overlay.style.display = 'flex';
+        });
+    });
+    document.getElementById('lightbox-overlay').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('lightbox-img').src = '';
+    });
+    </script>
+</body>
+</html>

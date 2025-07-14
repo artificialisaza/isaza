@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the_last_movie_on_earth_run_1 – Andrés Isaza Giraldo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-detail-container {
+            max-width: 1000px;
+            margin: 4rem auto 0 auto;
+            background: #232323;
+            border-radius: 12px;
+            padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+        }
+        .project-detail-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-transform: lowercase;
+        }
+        .project-detail-meta {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.2rem;
+        }
+        .project-detail-desc {
+            color: #cccccc;
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+        .project-detail-section {
+            margin-bottom: 2rem;
+        }
+        .project-detail-section h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            text-transform: lowercase;
+        }
+        .back-btn {
+            display: inline-block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            bottom: auto;
+            z-index: 1001;
+            margin: 0;
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.4rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .project-main-info {
+            flex: 1;
+        }
+        .project-stills {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3.5rem;
+        }
+        .project-stills img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .project-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .project-awards ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+        .project-awards ul li {
+            margin-bottom: 0.3rem;
+        }
+        .language-nav {
+            position: static;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0.7rem;
+            padding-bottom: 0.2rem;
+        }
+        .lang-btn {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .lang-btn.active,
+        .lang-btn:focus {
+            background: #5a5a5a;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 200;
+            padding: 0 2rem;
+            background: transparent;
+            backdrop-filter: none;
+            min-height: 4.2rem;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .nav-bar {
+                padding: 0 0.5rem;
+                min-height: 4.2rem;
+            }
+            .language-nav {
+                padding-top: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-bar {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: unset;
+                padding: 0 0.2rem;
+            }
+            .language-nav {
+                justify-content: center;
+                padding-top: 0.4rem;
+                padding-bottom: 0.2rem;
+            }
+        }
+        @media (max-width: 700px) {
+            .project-flex { flex-direction: column; gap: 1.2rem; }
+            .project-detail-container { padding: 1rem; }
+            .project-stills { grid-template-columns: 1fr; gap: 1rem; }
+            .project-stills img { width: 100%; height: 150px; }
+        }
+        .project-fullwidth-image img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .project-video {
+            width: 100%;
+            margin: 2rem 0;
+        }
+        .project-video iframe {
+            width: 100%;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .project-nft-link {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        .project-nft-link p {
+            color: #cccccc;
+            font-size: 1rem;
+            margin: 0;
+        }
+        .project-nft-link a {
+            color: #7ecfff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .project-nft-link a:hover {
+            color: #b0e0ff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navigation Bar -->
+    <div class="nav-bar">
+        <nav class="language-nav">
+            <button class="lang-btn active" data-lang="en">en</button>
+            <button class="lang-btn" data-lang="es">es</button>
+        </nav>
+    </div>
+    <a href="../index.html" class="back-btn">← back to projects</a>
+    <div class="project-detail-container">
+        <div class="project-flex">
+            <div class="project-main-info">
+                <h1 class="project-detail-title">the_last_movie_on_earth_run_1</h1>
+                <div class="project-detail-meta">2022 · 3 min · video in loop and digital image with stereo sound</div>
+                <div class="project-detail-desc" id="desc-en" style="display:block;">
+                    <p>How to simulate sacrality for a machine? This is the first run of a film that might become the last film to be ever done, even after the extinction of humanity.<br><br>
+                    The computer tries to relieve all life, once it is already gone.<br>
+                    Humans and life unravel from one single cell.<br>
+                    This fragile body that I am, is in itself my own history.<br>
+                    inaccessible but through my own [    body-history    ]<br><br>
+                    The nature of history is oblivion,<br>
+                    the world is destroyed by those who built it, <br>
+                    and the very ones who remember also decide to forget.<br>
+                    To be born is in itself to relive what was lived before.<br><br>
+                    The computer contains a list of text prompts describing images,<br>
+                    from which an unlimited number of new movies can be generated.<br>
+                    Code and video look at each other like a mirror.<br>
+                    The movie is a never-ending newly created memory.<br>
+                    In the age of machines, only life can guide [      them-us-me      ]</p>
+                </div>
+                <div class="project-detail-desc" id="desc-es" style="display:none;">
+                    <p>¿Cómo simular lo sagrado para una máquina?<br>
+                    Este es el primer ensayo de una película que podría ser la última jamás hecha, incluso después de la extinción de la humanidad.<br><br>
+                    El computador intenta revivir toda la vida, una vez que ya ha desaparecido.<br>
+                    Los humanos y la vida entera se despliegan desde una sola célula.<br>
+                    Este cuerpo frágil que soy, es en sí mismo mi propia historia,<br>
+                    inaccesible salvo a través de mi propio [ cuerpo-historia ]<br><br>
+                    La naturaleza de la historia es el olvido,<br>
+                    el mundo es destruido por quienes lo construyeron,<br>
+                    y quienes recuerdan, también deciden olvidar.<br>
+                    Nacer es, en sí mismo, revivir lo que ya fue vivido.<br><br>
+                    El computador contiene una lista de textos que describen imágenes,<br>
+                    a partir de los cuales puede generarse una cantidad infinita de nuevas películas.<br>
+                    El código y el video se miran como un espejo.<br>
+                    La película es una memoria recién creada, sin fin.<br>
+                    En la era de las máquinas, solo la vida puede guiar a [ ellos-nosotros-yo ]</p>
+                </div>
+            </div>
+        </div>
+        <div class="project-stills">
+            <a href="#" class="lightbox-link" data-img="../assets/images/last_run_1.jpg"><img src="../assets/images/last_run_1.jpg" alt="still 1 from the_last_movie_on_earth_run_1" /></a>
+            <a href="#" class="lightbox-link" data-img="../assets/images/last_run_2.png"><img src="../assets/images/last_run_2.png" alt="still 2 from the_last_movie_on_earth_run_1" /></a>
+            <a href="#" class="lightbox-link" data-img="../assets/images/last_run_3.jpg"><img src="../assets/images/last_run_3.jpg" alt="still 3 from the_last_movie_on_earth_run_1" /></a>
+            <a href="#" class="lightbox-link" data-img="../assets/images/last_run_4.png"><img src="../assets/images/last_run_4.png" alt="still 4 from the_last_movie_on_earth_run_1" /></a>
+        </div>
+        <div class="project-detail-section project-awards">
+            <h4>exhibitions</h4>
+            <ul>
+                <li>2022 RareEffect vol. 3 (Portugal)</li>
+                <li>2023 Artifício at Fundación Gilberto Alzate Avendaño (Colombia)</li>
+                <li>2024 Politics of Machines at LOGOI Institut für Philosophie und Diskurs (Germany)</li>
+                <li>2024 Galerias Abertas GABA at Faculdade de Belas-Artes Lisboa (Portugal)</li>
+            </ul>
+        </div>
+        <div class="project-video">
+            <iframe src="https://player.vimeo.com/video/950858055?h=1234567890abcdef&title=0&byline=0&portrait=0&transparent=0&autopause=0&dnt=1" width="100%" height="600" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="the_last_movie_on_earth_run_1"></iframe>
+        </div>
+        <div class="project-nft-link">
+            <p>Single NFT available at: <a href="https://foundation.app/mint/eth/0xCB4333631574263c8867a3149bB13285525C85d9/1" target="_blank" rel="noopener noreferrer">Foundation</a></p>
+        </div>
+    </div>
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
+    <script src="../js/language.js"></script>
+    <script>
+    // Language toggle for custom desc blocks
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            var lang = this.getAttribute('data-lang');
+            document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
+        });
+    });
+    // Lightbox
+    document.querySelectorAll('.lightbox-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const imgSrc = this.getAttribute('data-img');
+            const overlay = document.getElementById('lightbox-overlay');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            overlay.style.display = 'flex';
+        });
+    });
+    document.getElementById('lightbox-overlay').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('lightbox-img').src = '';
+    });
+    </script>
+</body>
+</html>

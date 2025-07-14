@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sereno (serene wind) – Andrés Isaza Giraldo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-detail-container {
+            max-width: 1000px;
+            margin: 4rem auto 0 auto;
+            background: #232323;
+            border-radius: 12px;
+            padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+        }
+        .project-detail-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-transform: lowercase;
+        }
+        .project-detail-meta {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.2rem;
+        }
+        .project-detail-desc {
+            color: #cccccc;
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+        .project-detail-media {
+            width: 100%;
+            margin-bottom: 2rem;
+            aspect-ratio: 16/9;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .project-detail-media img, .project-detail-media video, .project-detail-media iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            display: block;
+        }
+        .project-detail-section {
+            margin-bottom: 2rem;
+        }
+        .project-detail-section h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            text-transform: lowercase;
+        }
+        .back-btn {
+            display: inline-block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            bottom: auto;
+            z-index: 1001;
+            margin: 0;
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.4rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .project-poster {
+            width: 260px;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            align-self: flex-start;
+        }
+        .project-main-info {
+            flex: 1;
+        }
+        .project-stills {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3.5rem;
+        }
+        .project-stills img {
+            width: 100%;
+            min-width: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .project-credits {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .project-awards {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 0;
+        }
+        .project-awards h4 {
+            margin-bottom: 1.2rem;
+            margin-left: 1.5rem;
+        }
+        .project-review {
+            font-style: italic;
+            color: #e0e0e0;
+            margin-bottom: 3.5rem;
+            padding-left: 0;
+            text-align: justify;
+            border-left: none;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-size: 1em;
+            position: relative;
+        }
+        .project-review .quote-mark {
+            font-size: 2em;
+            color: #b0b0b0;
+            vertical-align: top;
+            line-height: 0.5;
+        }
+        .project-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .project-awards ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+        .project-awards ul li {
+            margin-bottom: 0.3rem;
+        }
+        .language-nav {
+            position: static;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0.7rem;
+            padding-bottom: 0.2rem;
+        }
+        .lang-btn {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .lang-btn.active,
+        .lang-btn:focus {
+            background: #5a5a5a;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 200;
+            padding: 0 2rem;
+            background: transparent;
+            backdrop-filter: none;
+            min-height: 4.2rem;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .nav-bar {
+                padding: 0 0.5rem;
+                min-height: 4.2rem;
+            }
+            .language-nav {
+                padding-top: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-bar {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: unset;
+                padding: 0 0.2rem;
+            }
+            .language-nav {
+                justify-content: center;
+                padding-top: 0.4rem;
+                padding-bottom: 0.2rem;
+            }
+        }
+        @media (max-width: 700px) {
+            .project-flex { flex-direction: column; gap: 1.2rem; }
+            .project-detail-container { padding: 1rem; }
+            .project-poster { width: 100%; float: none; margin: 0 0 1rem 0; }
+            .project-stills { flex-direction: column; gap: 1rem; }
+            .project-stills img { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navigation Bar -->
+    <div class="nav-bar">
+        <nav class="language-nav">
+            <button class="lang-btn active" data-lang="en">en</button>
+            <button class="lang-btn" data-lang="es">es</button>
+        </nav>
+    </div>
+    <a href="../index.html" class="back-btn">← back to projects</a>
+    <div class="project-detail-container">
+        <div class="project-flex">
+            <a href="#" class="lightbox-link" data-img="../assets/images/SE_posterweb.jpg"><img src="../assets/images/SE_posterweb.jpg" alt="sereno poster" class="project-poster" /></a>
+            <div class="project-main-info">
+                <h1 class="project-detail-title">sereno (serene wind)</h1>
+                <div class="project-detail-meta">2022 · 22 min · spanish · fiction / historical / nature</div>
+                <div class="project-detail-desc">
+                    1928. The thinker Fernando González and former jesuit Benjamín Correa have been walking for weeks. Completely isolated, they hike up the tropical glacier of the Nevado del Ruiz volcano where they wonder about evil and love. As Fernando gets swallowed by the wind, a magical appearance in the mountain desert connects his inner struggle to our present day.
+                </div>
+                <div class="project-credits">
+                    <strong>Cast:</strong> Benjamín González, Juan Lugo y Julián González<br>
+                    <strong>Direction, screenplay, producer:</strong> Andrés Isaza Giraldo<br>
+                    <strong>Co-producing companies:</strong> Guateque Cine, Emilia II Cine<br>
+                    <strong>Inspired by:</strong> 'Viaje a Pie' by Fernando González<br>
+                    <strong>Cinematography:</strong> Mauricio Reyes<br>
+                    <strong>Costume design:</strong> Catherine Rodríguez<br>
+                    <strong>Wardrobe and makeup:</strong> Maria Camila Castrillón<br>
+                    <strong>Editing:</strong> Juan Carlos Sánchez<br>
+                    <strong>Sound design:</strong> Diana Muñoz, Jose Delgadillo<br>
+                    <strong>Music:</strong> Tania Granada, Sara Fernández<br>
+                    <strong>Sales:</strong> Atmosfera International Sales
+                </div>
+            </div>
+        </div>
+        <div class="project-detail-media">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/ZqiLY_U79VU" title="sereno trailer" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="project-stills">
+            <a href="#" class="lightbox-link" data-img="../assets/images/SE_STILL_2.jpg"><img src="../assets/images/SE_STILL_2.jpg" alt="sereno still 2" /></a>
+            <a href="#" class="lightbox-link" data-img="../assets/images/SE_STILL_3.jpg"><img src="../assets/images/SE_STILL_3.jpg" alt="sereno still 3" /></a>
+        </div>
+        <div class="project-review">
+            <span class="quote-mark">“</span>Fernando González and Benjamín Correa cross the Nevado del Ruiz, they are two wandering walkers immersed in the immensity of a landscape that at the same time welcomes and strikes them; the inclemency of the journey gives rise to disjointed reflections, ideas come and go, they are renewed, just like the geography they travel through. Inspired by Fernando Gonzalez's Viaje a pie, Sereno bets on the representation of the sublime; the journey, although it implies movement and the constant search for paths, is at the same time an encounter with intimacy, an ascent towards abstract revelations about the demons that afflict them, atonement and love. The characters are confronted by the breathtaking nature of the paramo and the glacier, creating images that resemble the paintings of romanticism, and as a rupture mediated by the passage of thought, the modern city appears, a concrete landscape where Fernando questions the Catholic Church. Beyond the pursuit of a destination, it is the journey that becomes relevant; as the journey progresses, the narrative abandons the causal chain to propose sensorial images, where color, sound and music take center stage, as if the limits of the body were vanishing to give way to dreaming. Sereno proposes an edifying encounter with nature that notices the human being as part of it, walking it then becomes a mobilizing act of both body and thought, a stimulating journey through the evolution of unusual thoughts.”<br>
+            <span style="font-style:normal; color:#b0b0b0;">Melissa Mira from Cinemancia Film Festival</span>
+        </div>
+        <div class="project-detail-section project-awards">
+            <h4>selections and awards</h4>
+            <ul>
+                <li>2022 Official Selection - Cartagena de Indias International Film Festival FICCI (Col)</li>
+                <li>2022 International Competition - Beijing International Short Film Festival (China)</li>
+                <li>2022 Central Showcase - Cinemancia Metropolitan Film Festival, Medellín (Col)</li>
+                <li>2022 Regional Selection - Andares Contemporary Film Festival (Peru)</li>
+                <li>2022 National Selection - Cali Short Film Festival (Col)</li>
+                <li>2022 Best National Short Film - Bugarte Film and Visual Arts Festival (Col)</li>
+                <li>2022 Fiction Panorama - Bogotá International Short Film Festival Bogoshorts (Col)</li>
+                <li>2022 National Panorama - Popayán Short Film Festival (Col)</li>
+                <li>2022 International Film Fair of Manizales (Col)</li>
+                <li>2022 Sobreruedas Festival, Manizales (Col)</li>
+                <li>2022 Riosucio International Film Festival (Col)</li>
+                <li>2023 Arrieros y Pijaos Festival, Fresno (Col)</li>
+                <li>2023 International Film Festival in the Mountains, Salento (Col)</li>
+                <li>2023 National Selection - Sogamoso Independent Film Festival (Col)</li>
+                <li>2023 Official Selection - 17th Villa de Leyva International Film Festival (Col)</li>
+                <li>2023 Special Screening - DO(C)ÔA Nature Film Festival (Portugal)</li>
+                <li>2023 Cine y Encuentro, Manizales (Col)</li>
+                <li>2023 El Cine Suma Paz Festival, Sumapaz (Col)</li>
+                <li>2023 Sensory Cartographies Showcase, Yopal (Col)</li>
+            </ul>
+        </div>
+    </div>
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
+    <script src="../js/language.js"></script>
+    <script>
+    // Lightbox
+    document.querySelectorAll('.lightbox-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const imgSrc = this.getAttribute('data-img');
+            const overlay = document.getElementById('lightbox-overlay');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            overlay.style.display = 'flex';
+        });
+    });
+    document.getElementById('lightbox-overlay').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('lightbox-img').src = '';
+    });
+    </script>
+</body>
+</html>
