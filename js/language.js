@@ -6,30 +6,26 @@ const translations = {
         publications: 'publications',
         bio: 'about me',
         project1: {
-            title: 'En-join',
-            meta: '2025 · video-game'
-        },
-        project2: {
             title: 'Being Water',
             meta: '2024 · interactive experience'
         },
-        project3: {
+        project2: {
             title: 'the last film on earth',
             meta: '2023 · experimental short film'
         },
-        project4: {
+        project3: {
             title: 'last_movie_on_earth_run_1',
             meta: '2022 · video installation'
         },
-        project5: {
+        project4: {
             title: 'sereno (serene wind)',
             meta: '2022 · fiction short film'
         },
-        project6: {
+        project5: {
             title: 'homo videns',
             meta: '2020 · video-essay'
         },
-        project7: {
+        project6: {
             title: 'medias blancas',
             meta: '2017 · fiction short film'
         },
@@ -107,30 +103,26 @@ const translations = {
         publications: 'publicaciones',
         bio: 'sobre mí',
         project1: {
-            title: 'En-join',
-            meta: '2025 · videojuego'
-        },
-        project2: {
             title: 'Being Water',
             meta: '2024 · experiencia interactiva'
         },
-        project3: {
+        project2: {
             title: 'La última película',
             meta: '2023 · cortometraje experimental'
         },
-        project4: {
+        project3: {
             title: 'last_movie_on_earth_run_1',
             meta: '2022 · instalación de video'
         },
-        project5: {
+        project4: {
             title: 'Sereno',
             meta: '2022 · cortometraje de ficción'
         },
-        project6: {
+        project5: {
             title: 'homo videns',
             meta: '2020 · video-ensayo'
         },
-        project7: {
+        project6: {
             title: 'medias blancas',
             meta: '2017 · cortometraje de ficción'
         },
