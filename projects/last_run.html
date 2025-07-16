@@ -31,7 +31,7 @@
         }
         .project-detail-desc {
             color: #cccccc;
-            font-size: 1.15rem;
+            font-size: 1rem;
             margin-bottom: 2rem;
             text-align: justify;
         }
@@ -281,23 +281,60 @@
             </ul>
         </div>
         <div class="project-video">
-            <iframe src="https://player.vimeo.com/video/950858055?h=1234567890abcdef&title=0&byline=0&portrait=0&transparent=0&autopause=0&dnt=1" width="100%" height="600" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="the_last_movie_on_earth_run_1"></iframe>
+            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/935678774?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Last_mov_run_1"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
         </div>
         <div class="project-nft-link">
             <p>Single NFT available at: <a href="https://foundation.app/mint/eth/0xCB4333631574263c8867a3149bB13285525C85d9/1" target="_blank" rel="noopener noreferrer">Foundation</a></p>
         </div>
     </div>
     <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
-    <script src="../js/language.js"></script>
     <script>
-    // Language toggle for custom desc blocks
+    // Custom language system for Last Run page
+    // This page uses its own content structure, not the centralized translations
+    
+    // Set initial language state based on localStorage
+    function initializeLanguage() {
+        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+        
+        // Update button states
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === savedLang) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Set content visibility
+        document.getElementById('desc-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('desc-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+    }
+    
+    // Language toggle that integrates with the main language.js system
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            var lang = this.getAttribute('data-lang');
+            const lang = this.getAttribute('data-lang');
+            
+            // Update localStorage to sync with main page
+            localStorage.setItem('selectedLanguage', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Toggle content visibility
             document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
             document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
         });
     });
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initializeLanguage);
+    
+    // Fallback initialization
+    if (document.readyState !== 'loading') {
+        initializeLanguage();
+    }
+    
     // Lightbox
     document.querySelectorAll('.lightbox-link').forEach(link => {
         link.addEventListener('click', function(e) {

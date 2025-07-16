@@ -200,6 +200,15 @@ const translations = {
                 '2023 El Cine Suma Paz Festival, Sumapaz (Col)',
                 '2023 Sensory Cartographies Showcase, Yopal (Col)'
             ]
+        },
+        'homo-videns': {
+            title: 'homo videns',
+            meta: '2020 · 8\' · español · video-ensayo',
+            desc: `En la obra de Luis Ospina, hay una corriente subterránea que la sostiene y le da su particular coherencia, lucidez y rigor: la autoconciencia sobre su medio de expresión. Siendo muy niño, el padre de Ospina le entregó al futuro director una cámara: «ahora le toca [filmar] a usted». Ese niño que «simplemente observaba» la realidad, según dice Ospina de sí mismo, no solo va a poblar sus películas de aparatos de registro y captura del sonido y la imagen, y de pantallas de todo tipo. Se sirve de esa tecnología para hacer un comentario -escéptico, irónico- sobre una sociedad que él, desde muy temprano, intuyó que era una sociedad teledirigida, de miedos acrecentados por los medios: un estado de cosas que solo un aparato crítico, como el que intentó y al que le dio forma, podría desactivar.`,
+            credits: `<strong>Co-dirigido con:</strong> Pedro Adrián Zuluaga`,
+            awards: [
+                'Video encargado para la exposición "Luis Ospina: el corolario es casi inevitable, 1970-2019" en Fundación Gilberto Alzate Avendaño'
+            ]
         }
     }
 };
@@ -212,6 +221,7 @@ function getProjectKeyFromURL() {
         // Map filename to translation key if needed
         if (match[1] === 'lorem-film') return 'sereno';
         if (match[1] === 'the-last-film-on-earth') return 'the-last-film-on-earth';
+        if (match[1] === 'homo_videns') return 'homo-videns';
         // Add more mappings as needed
         return match[1];
     }

@@ -418,6 +418,39 @@ body {
     min-height: 320px;
     overflow: hidden;
 }
+
+.project-item-being-water {
+    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/Being_Water_Still_2_compressed.jpg') center center/cover no-repeat;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+}
+
+.project-item-homo-videns {
+    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/HV1_compressed.jpg') center center/cover no-repeat;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+}
+
+.project-item-medias-blancas {
+    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/MB Still 2.jpg') center center/cover no-repeat;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+}
 .project-item-sereno h3,
 .project-item-sereno .project-meta,
 .project-item-sereno p,
@@ -426,7 +459,16 @@ body {
 .project-item-last-run p,
 .project-item-last-film h3,
 .project-item-last-film .project-meta,
-.project-item-last-film p {
+.project-item-last-film p,
+.project-item-being-water h3,
+.project-item-being-water .project-meta,
+.project-item-being-water p,
+.project-item-homo-videns h3,
+.project-item-homo-videns .project-meta,
+.project-item-homo-videns p,
+.project-item-medias-blancas h3,
+.project-item-medias-blancas .project-meta,
+.project-item-medias-blancas p {
     position: relative;
     z-index: 2;
 }
@@ -443,6 +485,21 @@ body {
 
 .project-link .project-item-last-film:hover {
     background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/LAST_FRAME_01.png') center center/cover no-repeat !important;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+}
+
+.project-link .project-item-being-water:hover {
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/Being_Water_Still_2_compressed.jpg') center center/cover no-repeat;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+}
+
+.project-link .project-item-homo-videns:hover {
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/HV1_compressed.jpg') center center/cover no-repeat;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+}
+
+.project-link .project-item-medias-blancas:hover {
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/MB Still 2.jpg') center center/cover no-repeat;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 } 
 

@@ -4,9 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>medias blancas – Andrés Isaza Giraldo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-detail-container {
+            max-width: 1000px;
+            margin: 4rem auto 0 auto;
+            background: #232323;
+            border-radius: 12px;
+            padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+        }
+        .project-detail-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-transform: lowercase;
+        }
+        .project-detail-meta {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.2rem;
+        }
+        .project-detail-desc {
+            color: #cccccc;
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+        .project-detail-media {
+            width: 100%;
+            margin-bottom: 2rem;
+            aspect-ratio: 16/9;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .project-detail-media img, .project-detail-media video, .project-detail-media iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            display: block;
+        }
+        .project-detail-section {
+            margin-bottom: 2rem;
+        }
+        .project-detail-section h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            text-transform: lowercase;
+        }
+        .back-btn {
+            display: inline-block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            bottom: auto;
+            z-index: 1001;
+            margin: 0;
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.4rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .project-poster {
+            width: 260px;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            align-self: flex-start;
+        }
+        .project-main-info {
+            flex: 1;
+        }
+        .project-stills {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3.5rem;
+        }
+        .project-stills img {
+            width: 100%;
+            min-width: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .project-fullwidth-image {
+            margin-bottom: 2rem;
+        }
+        .project-fullwidth-image img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .project-video {
+            width: 100%;
+            margin: 2rem 0;
+        }
+        .project-video iframe {
+            width: 100%;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .project-credits {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .project-awards {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 0;
+        }
+        .project-awards h4 {
+            margin-bottom: 1.2rem;
+            margin-left: 1.5rem;
+        }
+        .project-review {
+            font-style: italic;
+            color: #e0e0e0;
+            margin-bottom: 3.5rem;
+            padding-left: 0;
+            text-align: justify;
+            border-left: none;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-size: 1em;
+            position: relative;
+        }
+        .project-review p {
+            margin-bottom: 1.5rem;
+        }
+        .project-review p:last-of-type {
+            margin-bottom: 1rem;
+        }
+        .project-review .quote-mark {
+            font-size: 2em;
+            color: #b0b0b0;
+            vertical-align: top;
+            line-height: 0.5;
+        }
+        .project-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .project-awards ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+        .project-awards ul li {
+            margin-bottom: 0.3rem;
+        }
+        .language-nav {
+            position: static;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0.7rem;
+            padding-bottom: 0.2rem;
+        }
+        .lang-btn {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .lang-btn.active,
+        .lang-btn:focus {
+            background: #5a5a5a;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 200;
+            padding: 0 2rem;
+            background: transparent;
+            backdrop-filter: none;
+            min-height: 4.2rem;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .nav-bar {
+                padding: 0 0.5rem;
+                min-height: 4.2rem;
+            }
+            .language-nav {
+                padding-top: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-bar {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: unset;
+                padding: 0 0.2rem;
+            }
+            .language-nav {
+                justify-content: center;
+                padding-top: 0.4rem;
+                padding-bottom: 0.2rem;
+            }
+        }
+        @media (max-width: 700px) {
+            .project-flex { flex-direction: column; gap: 1.2rem; }
+            .project-detail-container { padding: 1rem; }
+            .project-poster { width: 100%; float: none; margin: 0 0 1rem 0; }
+            .project-stills { flex-direction: column; gap: 1rem; }
+            .project-stills img { width: 100%; }
+        }
+    </style>
 </head>
 <body>
+    <!-- Sticky Navigation Bar -->
     <div class="nav-bar">
         <nav class="language-nav">
             <button class="lang-btn active" data-lang="en">en</button>
@@ -15,15 +269,219 @@
     </div>
     <a href="../index.html" class="back-btn">← back to projects</a>
     <div class="project-detail-container">
-        <h1 class="project-detail-title">medias blancas</h1>
-        <div class="project-detail-meta">2017 · fiction short film</div>
-        <div class="project-detail-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.</div>
-        <div class="project-credits">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+        <div class="project-flex">
+            <a href="#" class="lightbox-link" data-img="../assets/images/MB_afiche.jpg"><img src="../assets/images/MB_afiche.jpg" alt="medias blancas poster" class="project-poster" /></a>
+            <div class="project-main-info">
+                <h1 class="project-detail-title" id="title-en" style="display:block;">medias blancas</h1>
+                <h1 class="project-detail-title" id="title-es" style="display:none;">medias blancas</h1>
+                <div class="project-detail-meta" id="meta-en" style="display:block;">2017 · 14' · Spanish with english subtitles · fiction short film</div>
+                <div class="project-detail-meta" id="meta-es" style="display:none;">2017 · 14' · Español · cortometraje de ficción</div>
+                <div class="project-detail-desc" id="desc-en" style="display:block;">
+                    Ignacio, a timid young man, just left home to go to college. Lost in everyday life, he wants his white socks to look white again.
+                </div>
+                <div class="project-detail-desc" id="desc-es" style="display:none;">
+                    Ignacio, un joven tímido, acaba de salir de casa para ir a la universidad. Perdido en la cotidianidad, quiere que sus medias blancas se vean blancas de nuevo.
+                </div>
+                <div class="project-credits" id="credits-en" style="display:block;">
+                    <strong>Cast:</strong> Pedro Pachón, Pedro Londoño<br>
+                    <strong>Director:</strong> Andrés Isaza<br>
+                    <strong>Producers:</strong> Ana María Correa y Juan Sebastián Patiño<br>
+                    <strong>Cinematography:</strong> Andrés Carrillo<br>
+                    <strong>Art Director:</strong> Alirio Cruz<br>
+                    <strong>Sound Recording:</strong> Sara Fernández<br>
+                    <strong>Sound Design:</strong> Rafael Santander<br>
+                    <strong>Editing:</strong> Juan Carlos Sánchez<br>
+                    <strong>Assistant Director:</strong> Santiago Parra
+                </div>
+                <div class="project-credits" id="credits-es" style="display:none;">
+                    <strong>Reparto:</strong> Pedro Pachón, Pedro Londoño<br>
+                    <strong>Director:</strong> Andrés Isaza<br>
+                    <strong>Productores:</strong> Ana María Correa y Juan Sebastián Patiño<br>
+                    <strong>Director de fotografía:</strong> Andrés Carrillo<br>
+                    <strong>Director de arte:</strong> Alirio Cruz<br>
+                    <strong>Sonido directo:</strong> Sara Fernández<br>
+                    <strong>Diseño sonoro:</strong> Rafael Santander<br>
+                    <strong>Montaje:</strong> Juan Carlos Sánchez<br>
+                    <strong>Asistencia de dirección:</strong> Santiago Parra
+                </div>
+            </div>
+        </div>
+        <div class="project-fullwidth-image">
+            <img src="../assets/images/MB Still 1.jpg" alt="Medias blancas Still 1" />
+        </div>
+        <div class="project-review" id="review-en" style="display:block;">
+            <p>A young man looks for the cleanest socks in the neighborhood before some party can distract him from his task. Ignacio is a dedicated university student, a model of hard work and study, who wishes to have white socks and searches for the product which can make that available to him. The goal of the actions in this short film is the perfect white —the kind of white that shows Ignacio's cleanliness and personality, as well as his trivial values.</p>
+
+<p>To have control over matter is a part of civilization's features and, also, a feature of a habit that Ignacio wants to perfect in spite of the distractions caused by one of his friends. Without attempting to filter the normality of the actions, at least two sequences will be key to indicate how one can come out from everyday life without great narrative or visual devices.</p>
+
+<p>By using archive images, this short film acquires a bit of verisimilitude that montage itself does not provide. Ignacio, as a boy, plays by a pool with his siblings. The weather is ideal and timeless, marked by the flaws of time within the texture of the image. Thus helped by the format, we perceive the stains of a nostalgia that seeks to be projected in another moment of Ignacio's life.</p>
+            <span style="font-style:normal; color:#b0b0b0;">Carlos Rgó from FICUNAM</span>
+        </div>
+        <div class="project-review" id="review-es" style="display:none;">
+            <p>Un chico busca las calcetas más limpias del barrio antes de que alguna fiesta le distraiga de su cometido. Ignacio es un universitario dedicado a una labor de ejemplo y estudio que desea tener las medias blancas y el producto que pueda conseguírselo. El objetivo de las acciones en el cortometraje son el blanco perfecto: aquel blanco que muestra la limpieza y la personalidad de Ignacio, además de sus valores pueriles.</p>
+
+<p>Tener el control sobre la materia es parte de las características de la civilización y de un hábito que Ignacio quiere perfeccionar pese a las distracciones de uno de sus amigos. Sin ganas de depurar la normalidad de las acciones, al menos dos secuencias serán la clave para indicar cómo se puede salir de la cotidianidad sin grandes artificios narrativos o visuales.</p>
+
+<p>Utilizar imágenes de archivo otorga al cortometraje una pizca de verosimilitud que el montaje no logra por sí mismo. Ignacio, de niño, juega con sus hermanos cerca de una piscina. El clima es ideal y atemporal, marcado por los defectos del tiempo en la textura de la imagen. Ayudados del formato, percibimos las manchas de una nostalgia que busca la proyección en otro momento de la vida de Ignacio.</p>
+            <span style="font-style:normal; color:#b0b0b0;">Carlos Rgó de FICUNAM</span>
+        </div>
+        <div class="project-fullwidth-image">
+            <img src="../assets/images/MB Still 3.jpg" alt="Medias blancas Still 3" />
+        </div>
         <div class="project-detail-section project-awards">
-            <h4>selections and awards</h4>
-            <ul><li>Lorem ipsum award 2017</li></ul>
+            <h4 id="awards-title-en" style="display:block;">selections and awards</h4>
+            <h4 id="awards-title-es" style="display:none;">selecciones y premios</h4>
+            <ul id="awards-list-en" style="display:block;">
+                <li>2018 Selection 'Aciertos' in FICUNAM 2018 (Festival Internacional de Cine de la Universidad Nacional Autónoma de México) (MEX) [International Premiere]</li>
+                <li>2018 Winner first place National short film at 10º Maratón de Cortometrajes Pantalones Cortos, Medellín (COL)</li>
+                <li>2018 'Special mention' in 3 Eureka Festival Universitario de Cine, Bogotá (COL)</li>
+                <li>2018 'Special mention' Official selection university en Festival Cortos Cali 2018, Cali (COL)</li>
+                <li>2017 Selection 'Panorama Ficción' in 15 BOGOSHORTS (Festival de Cortos de Bogotá) (COL) [World/National Premiere]</li>
+                <li>2018 'National Competition' in 10 Festival Internacional de Cine de Cali FICCALI (COL) curated by Luis Ospina.</li>
+                <li>2019 Muestra 'Voces - Bogoshorts Film Market (BFM)' at the 21 Semana del Cortometraje De la Comunidad Autónoma de Madrid (SPA)</li>
+                <li>2018 FICU - Festival Internacional de Cine Universitario (ARG)</li>
+                <li>2018 'Competencia de Cortometrajes Caleidoscopio' at 3er Festival de Cine al Jardín, Antioquia (COL) directed by Víctor Gaviria.</li>
+                <li>2018 Official Selection at 11 CINETORO Experimental Film Festival (COL)</li>
+                <li>2018 Showcase '30 años de la ECYTV UNAL' at 16 BOGOSHORTS (COL) curated by Diana Bustamante.</li>
+                <li>2018 Competencia de Cortometrajes - Escuela Nacionales en 12 Festival Internacional de Cine Independiente de Villa de Leyva (COL)</li>
+                <li>2019 Seletion 'Trabajo de Escuela o Universidad' at Salón Internacional de la Luz SIL (COL)</li>
+                <li>2018 Panorama Ficción at 10 Festival de Cine Corto de Popayán (COL)</li>
+                <li>2019 Official Selection 5ta Feria Internacional de Cine Independiente FECI Bogostá</li>
+                <li>2018 Official Selection Graduation Films at XX Equinoxio Festival de Cine Universitario, Bogotá (COL)</li>
+                <li>2018 Selection 'Cine(y)Digital' at XVII International Image Festival in Manizales (COL)</li>
+                <li>2018 Winner Best Fiction Short Film at Premios Corte Final 2018 in Pereira (COL)</li>
+                <li>2018 Selection at Festival de Cine Universitario La Noche Americana (COL)</li>
+                <li>2018 Selection at 18 Festival de Cortometrajes Cine a la Calle in Barranquilla (COL)</li>
+                <li>2018 Showcase UNAL FEST 2018</li>
+                <li>2019 Showcase Best Graduation Film from Escuela de Cine y TV - Universidad Nacional de Colombia at UNAL FEST</li>
+                <li>2020 DVD Audiovisual showcase 30 Años Escuela de Cine y Televisión 1988-2018</li>
+                <li>2023 Retrospective 25 Anniversary Festival Equinoxio</li>
+                <li>2016 Winner 'Short Film Writing Workshop' in BIFF 2016 (Bogota International Film Festival).</li>
+                <li>2016 Winner of the fund 'Beca Cinemateca para Creación de Cortometraje de Ficción Alternativo 2016' of Idartes (Distrital Institute for the Arts, Bogota)</li>
+            </ul>
+            <ul id="awards-list-es" style="display:none;">
+                <li>2018 Selección 'Aciertos' en FICUNAM 8 (Festival Internacional de Cine de la Universidad Nacional Autónoma de México) (MEX)</li>
+                <li>2018 Ganador primer puesto Cortometraje Nacional en 10º Maratón de Cortometrajes Pantalones Cortos, Medellín (COL)</li>
+                <li>2018 'Mención Especial' en 3 Eureka Festival Universitario de Cine, Bogotá (COL)</li>
+                <li>2018 'Mención Especial' Selección Oficial Nacional Universitaria en Festival Cortos Cali 2018, Cali (COL)</li>
+                <li>2017 Selección 'Panorama Ficción' en 15 BOGOSHORTS (Festival de Cortos de Bogotá) (COL)</li>
+                <li>2018 'Competencia Nacional de Cortometrajes' en 10 Festival Internacional de Cine de Cali FICCALI (COL)</li>
+                <li>2019 Muestra 'Voces - Bogoshorts Film Market (BFM)' en la 21 Semana del Cortometraje De la Comunidad Autónoma de Madrid (ESP)</li>
+                <li>2018 FICU - Festival Internacional de Cine Universitario (ARG)</li>
+                <li>2018 'Competencia de Cortometrajes Caleidoscopio' en 3er Festival de Cine al Jardín, Antioquia (COL)</li>
+                <li>2018 Selección Oficial Nacional en 11 CINETORO Experimental Film Festival (COL)</li>
+                <li>2018 Muestra '30 años de la EYCTV UNAL' en 16 BOGOSHORTS (COL)</li>
+                <li>2018 Competencia de Cortometrajes - Escuela Nacionales en 12 Festival Internacional de Cine Independiente de Villa de Leyva (COL)</li>
+                <li>2019 Selección 'Trabajo de Escuela o Universidad' en Salón Internacional de la Luz SIL 2019 (COL)</li>
+                <li>2018 Panorama Ficción en 10 Festival de Cine Corto de Popayán (COL)</li>
+                <li>2019 Selección Oficial 5ta Feria Internacional de Cine Independiente FECI Bogostá</li>
+                <li>2018 Selección Oficial de Trabajos de Grado en XX Equinoxio Festival de Cine Universitario, Bogotá (COL)</li>
+                <li>2018 Selección 'Cine(y)Digital' en XVII Festival Internacional de la Imagen de Manizales (COL)</li>
+                <li>2018 Ganador Mejor Corto de Ficción en Premios Corte Final 2018 de Pereira (COL)</li>
+                <li>2018 Selección en Primer Festival de Cine Universitario La Noche Americana (COL)</li>
+                <li>2018 Selección en 18 Festival de Cortometrajes Cine a la Calle de Barranquilla (COL)</li>
+                <li>2018 Muestra UNAL FEST 2018</li>
+                <li>2019 Muestra de los Mejores Trabajos de Grado de la Escuela de Cine y TV de la Universidad Nacional de Colombia en UNAL FEST</li>
+                <li>2020 DVD Muestra Audiovisual 30 Años Escuela de Cine y Televisión 1988-2018</li>
+                <li>2023 Retrospectiva 25 Aniversario Festival Equinoxio</li>
+                <li>2016 Proyecto ganador en el 'Taller de Escritura de Guion para Cortometraje' en el BIFF 2016 (Bogota International Film Festival).</li>
+                <li>2016 Proyecto ganador 'Beca Cinemateca para Creación de Cortometraje de Ficción Alternativo 2016' de Idartes (Instituto Distrital de las Artes, Bogotá).</li>
+            </ul>
+        </div>
+        <div class="project-video">
+            <div style="padding:75% 0 0 0;position:relative;">
+                <iframe src="https://player.vimeo.com/video/194861121?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Medias blancas"></iframe>
+            </div>
+            <script src="https://player.vimeo.com/api/player.js"></script>
         </div>
     </div>
-    <script src="../js/language.js"></script>
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
+    <script>
+    // Custom language system for Medias Blancas page
+    // This page uses its own content structure, not the centralized translations
+    
+    // Set initial language state based on localStorage
+    function initializeLanguage() {
+        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+        
+        // Update button states
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === savedLang) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Set content visibility
+        document.getElementById('title-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('title-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        document.getElementById('meta-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('meta-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        document.getElementById('desc-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('desc-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        document.getElementById('credits-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('credits-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        document.getElementById('review-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('review-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        document.getElementById('awards-title-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('awards-title-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        document.getElementById('awards-list-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('awards-list-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+    }
+    
+    // Language toggle that integrates with the main language.js system
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            
+            // Update localStorage to sync with main page
+            localStorage.setItem('selectedLanguage', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Toggle content visibility
+            document.getElementById('title-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('title-es').style.display = (lang === 'es') ? 'block' : 'none';
+            document.getElementById('meta-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('meta-es').style.display = (lang === 'es') ? 'block' : 'none';
+            document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
+            document.getElementById('credits-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('credits-es').style.display = (lang === 'es') ? 'block' : 'none';
+            document.getElementById('review-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('review-es').style.display = (lang === 'es') ? 'block' : 'none';
+            document.getElementById('awards-title-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('awards-title-es').style.display = (lang === 'es') ? 'block' : 'none';
+            document.getElementById('awards-list-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('awards-list-es').style.display = (lang === 'es') ? 'block' : 'none';
+        });
+    });
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initializeLanguage);
+    
+    // Fallback initialization
+    if (document.readyState !== 'loading') {
+        initializeLanguage();
+    }
+    
+    // Lightbox
+    document.querySelectorAll('.lightbox-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const imgSrc = this.getAttribute('data-img');
+            const overlay = document.getElementById('lightbox-overlay');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            overlay.style.display = 'flex';
+        });
+    });
+    document.getElementById('lightbox-overlay').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('lightbox-img').src = '';
+    });
+    </script>
 </body>
 </html> 
