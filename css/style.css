@@ -375,14 +375,24 @@ body {
 @media (max-width: 600px) {
     .nav-bar {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start; /* left align both rows */
         min-height: unset;
-        padding: 0 0.2rem;
+        padding: 0 0.2rem 0 1rem; /* left padding instead of margin */
+        top: 0.5rem; /* always leave spacing at the top when sticky */
+        /* margin-left removed to prevent horizontal scroll */
     }
     .section-nav, .language-nav {
-        justify-content: center;
+        justify-content: flex-start; /* left align buttons */
         padding-top: 0.4rem;
         padding-bottom: 0.2rem;
+        margin-left: 0; /* reset if any */
+    }
+    .section-nav {
+        margin-bottom: 0.5rem; /* reduce space between rows */
+        margin-top: 0.7rem; /* match top margin to gap */
+    }
+    .language-nav {
+        margin-bottom: 1.2rem; /* keep some space below */
     }
 } 
 
