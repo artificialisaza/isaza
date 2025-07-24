@@ -102,7 +102,17 @@ const translations = {
                 '2023 El Cine Suma Paz Festival, Sumapaz (Col)',
                 '2023 Sensory Cartographies Showcase, Yopal (Col)'
             ]
-        }
+        },
+        'homo-videns': {
+            title: 'homo videns',
+            meta: '2020 · 8\' · español · video-ensayo',
+            desc: `En la obra de Luis Ospina, hay una corriente subterránea que la sostiene y le da su particular coherencia, lucidez y rigor: la autoconciencia sobre su medio de expresión. Siendo muy niño, el padre de Ospina le entregó al futuro director una cámara: «ahora le toca [filmar] a usted». Ese niño que «simplemente observaba» la realidad, según dice Ospina de sí mismo, no solo va a poblar sus películas de aparatos de registro y captura del sonido y la imagen, y de pantallas de todo tipo. Se sirve de esa tecnología para hacer un comentario -escéptico, irónico- sobre una sociedad que él, desde muy temprano, intuyó que era una sociedad teledirigida, de miedos acrecentados por los medios: un estado de cosas que solo un aparato crítico, como el que intentó y al que le dio forma, podría desactivar.`,
+            credits: `<strong>Co-dirigido con:</strong> Pedro Adrián Zuluaga`,
+            awards: [
+                'Video encargado para la exposición "Luis Ospina: el corolario es casi inevitable, 1970-2019" en Fundación Gilberto Alzate Avendaño'
+            ]
+        },
+        'fluid-mirrors-abstract': `This work seeks to understand the physical and metaphysical dimensions of rivers ...`
     },
     es: {
         // Main page translations
@@ -214,7 +224,12 @@ const translations = {
             awards: [
                 'Video encargado para la exposición "Luis Ospina: el corolario es casi inevitable, 1970-2019" en Fundación Gilberto Alzate Avendaño'
             ]
-        }
+        },
+        'fluid-mirrors-abstract': `Este trabajo trata de comprender las dimensiones físicas y metafísicas de los ríos y cómo pueden expresarse como proceso cinematográfico. Propone una película análoga al río en su forma, volumen y tiempo, a través de diferentes perspectivas ontológicas y artísticas. Se abordan tres cuestiones principales: cómo filmar los ríos del futuro, cómo hacer una película espejo y cómo filmar desde la corteza visual. Aunque estas preguntas puedan parecer imposibles de responder de forma práctica, se exploran posibles enfoques filosóficos, artísticos y científicos.
+
+La figura de Narciso en el arte contemporáneo revela una obsesión por la creación y los propios medios de comunicación. Además, Narciso se interpreta como una representación de la enfermedad social contemporánea, pues la modernidad técnica haya dejado latente en nosotros la latencia humana. La obra se inspira en la filosofía y mitología de varios pueblos originarios, especialmente de la cuenca del río Amazonas, que describen las prácticas de soñar y conectar con el mundo espiritual. Se propone una cura para el adormecimiento moderno a través de una película reflexiva que invita al espectador a experimentar el fluir de Narciso y su metamorfosis en río.
+
+Tras revisar los ríos, los espejos y la corteza visual desde una perspectiva reduccionista, se propone una unidad de conceptos en la caja craneal en una especulación científico-poética. En medio de estas digresiones se encuentran los sueños del artista y su percepción subjetiva del mundo natural y artificial, así como las decisiones técnicas a las que obliga el pensamiento en la construcción de una película río-espejo-córtex, que incluyen tomas de cámara en 360º y algoritmos de aprendizaje de máquina. En lugar de llegar a elaboraciones concretas, el ensayo propone la liberación del estado simbólico del arte y la libre formación del arte tanto en el objeto como en el espectador. Al final, solo queda silencio.`
     }
 };
 
@@ -278,6 +293,22 @@ function setLanguage(lang) {
         }
     }
     console.log('setLanguage completed');
+
+    // Update all elements with data-translate attribute
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (translations[lang][key]) {
+            // If the element contains a video/image, preserve it and only replace the text after it
+            const media = el.querySelector('.publication-video-container, .publication-image-left, .pub-thumb');
+            if (media) {
+                el.innerHTML = '';
+                el.appendChild(media);
+                el.innerHTML += translations[lang][key];
+            } else {
+                el.innerHTML = translations[lang][key];
+            }
+        }
+    });
 }
 
 // Project detail page language switching
