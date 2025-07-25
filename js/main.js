@@ -24,6 +24,19 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const tabName = this.getAttribute('data-tab');
             switchTab(tabName);
+            // If publications tab is activated, update language for abstracts after DOM update
+            if (tabName === 'publications') {
+                setTimeout(() => {
+                    const lang = localStorage.getItem('selectedLanguage') || 'en';
+                    document.querySelectorAll('[data-translate]').forEach(el => {
+                        const key = el.getAttribute('data-translate');
+                        const textSpan = el.querySelector('.abstract-text');
+                        if (textSpan && translations[lang][key]) {
+                            textSpan.innerHTML = translations[lang][key];
+                        }
+                    });
+                }, 0);
+            }
         });
     });
 
@@ -96,6 +109,50 @@ document.addEventListener('keydown', function(event) {
         
         tabButtons[newIndex].click();
     }
+}); 
+
+// --- Dynamic Project Rendering ---
+function renderProjects(lang) {
+  if (typeof projects === 'undefined') return;
+  const sorted = projects.slice().sort((a, b) => b.year - a.year);
+  const container = document.getElementById('project-list');
+  if (!container) return;
+  container.innerHTML = '';
+  sorted.forEach(project => {
+    const card = document.createElement('a');
+    card.href = project.link;
+    card.className = 'project-link';
+    card.innerHTML = `
+      <div class="project-item" style="background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat;">
+        <h3>${project.title[lang]}</h3>
+        <p class="project-meta">${project.meta[lang]}</p>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// --- Language Switching Integration ---
+function getCurrentLanguage() {
+  return localStorage.getItem('selectedLanguage') || 'en';
+}
+
+// Patch language switching to re-render projects
+const origSetLanguage = window.setLanguage;
+window.setLanguage = function(lang) {
+  if (typeof origSetLanguage === 'function') origSetLanguage(lang);
+  renderProjects(getCurrentLanguage());
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderProjects(getCurrentLanguage());
+});
+
+// Listen for localStorage changes (e.g., language change in another tab or after navigation)
+window.addEventListener('storage', function(e) {
+  if (e.key === 'selectedLanguage') {
+    renderProjects(getCurrentLanguage());
+  }
 }); 
 
  

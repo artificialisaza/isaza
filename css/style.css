@@ -199,6 +199,7 @@ body {
     padding: 1.5rem 2rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     transition: box-shadow 0.2s;
+    min-height: 380px;
 }
 
 .project-item:hover {
@@ -565,4 +566,46 @@ body {
     transition: max-height 0.3s ease;
     overflow: hidden;
     text-align: justify;
+} 
+
+.project-item-santas-postales {
+    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/santas_postales/cards_photo_front.jpg') center center/cover no-repeat;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+}
+.project-item-santas-postales h3,
+.project-item-santas-postales .project-meta,
+.project-item-santas-postales p {
+    position: relative;
+    z-index: 2;
+}
+.project-link .project-item-santas-postales:hover {
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/santas_postales/cards_photo_front.jpg') center center/cover no-repeat;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+} 
+
+.project-item-bailar-triste {
+    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/BT2.jpg') center center/cover no-repeat;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+}
+.project-item-bailar-triste h3,
+.project-item-bailar-triste .project-meta,
+.project-item-bailar-triste p {
+    position: relative;
+    z-index: 2;
+}
+.project-link .project-item-bailar-triste:hover {
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/BT2.jpg') center center/cover no-repeat;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 } 

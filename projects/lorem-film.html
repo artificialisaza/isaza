@@ -275,9 +275,13 @@
             <a href="#" class="lightbox-link" data-img="../assets/images/SE_posterweb.jpg"><img src="../assets/images/SE_posterweb.jpg" alt="sereno poster" class="project-poster" /></a>
             <div class="project-main-info">
                 <h1 class="project-detail-title">sereno (serene wind)</h1>
-                <div class="project-detail-meta">2022 · 22 min · spanish · fiction / historical / nature</div>
-                <div class="project-detail-desc">
+                <div class="project-detail-meta" id="meta-en" style="display:block;">2022 · 22 min · spanish · fiction / historical / nature</div>
+                <div class="project-detail-meta" id="meta-es" style="display:none;">2022 · 22 min · español · ficción / histórica / naturaleza</div>
+                <div class="project-detail-desc" id="desc-en" style="display:block;">
                     1928. The thinker Fernando González and former jesuit Benjamín Correa have been walking for weeks. Completely isolated, they hike up the tropical glacier of the Nevado del Ruiz volcano where they wonder about evil and love. As Fernando gets swallowed by the wind, a magical appearance in the mountain desert connects his inner struggle to our present day.
+                </div>
+                <div class="project-detail-desc" id="desc-es" style="display:none;">
+                    1928. El pensador Fernando González y el exjesuita Benjamín Correa han estado caminando durante semanas. Completamente aislados, ascienden el glaciar tropical del Nevado del Ruiz, donde reflexionan sobre el mal y el amor. Cuando Fernando es tragado por el viento, una aparición mágica en el desierto de la montaña conecta su lucha interior con nuestro presente.
                 </div>
                 <div class="project-credits">
                     <strong>Cast:</strong> Benjamín González, Juan Lugo y Julián González<br>
@@ -333,6 +337,37 @@
     <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
     <script src="../js/language.js"></script>
     <script>
+    function updateLanguageUI(lang) {
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+        });
+        document.querySelectorAll('[id^="desc-"], [id^="meta-"], [id^="credits-"]').forEach(el => {
+            if (el.id.endsWith(lang)) {
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        });
+    }
+    function initializeLanguageUniversal() {
+        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+        updateLanguageUI(savedLang);
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                localStorage.setItem('selectedLanguage', lang);
+                updateLanguageUI(lang);
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', initializeLanguageUniversal);
+    if (document.readyState !== 'loading') initializeLanguageUniversal();
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'selectedLanguage') {
+            updateLanguageUI(localStorage.getItem('selectedLanguage') || 'en');
+        }
+    });
     // Lightbox
     document.querySelectorAll('.lightbox-link').forEach(link => {
         link.addEventListener('click', function(e) {
