@@ -122,12 +122,24 @@ function renderProjects(lang) {
     const card = document.createElement('a');
     card.href = project.link;
     card.className = 'project-link';
-    card.innerHTML = `
-      <div class="project-item" style="background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat;">
-        <h3>${project.title[lang]}</h3>
-        <p class="project-meta">${project.meta[lang]}</p>
-      </div>
+    const projectItem = document.createElement('div');
+    projectItem.className = 'project-item';
+    projectItem.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
+    projectItem.innerHTML = `
+      <h3>${project.title[lang]}</h3>
+      <p class="project-meta">${project.meta[lang]}</p>
     `;
+    
+    // Add hover effect
+    projectItem.addEventListener('mouseenter', function() {
+      this.style.background = `linear-gradient(rgba(30,30,30,0.5), rgba(30,30,30,0.6)), url('${project.image}') center center/cover no-repeat`;
+    });
+    
+    projectItem.addEventListener('mouseleave', function() {
+      this.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
+    });
+    
+    card.appendChild(projectItem);
     container.appendChild(card);
   });
 }

@@ -41,12 +41,44 @@ const projects = [
     link: "projects/santas_postales.html"
   },
   {
+    id: "tiranosaurio",
+    year: 2021,
+    title: { en: "Animal blanco - Tiranosaurio rex", es: "Animal blanco - Tiranosaurio rex" },
+    meta: { en: "2021 · music video", es: "2021 · videoclip" },
+    image: "assets/images/TR_2.jpg",
+    link: "projects/tiranosaurio.html"
+  },
+  {
     id: "homo_videns",
     year: 2020,
     title: { en: "homo videns", es: "homo videns" },
     meta: { en: "2020 · video-essay", es: "2020 · video-ensayo" },
     image: "assets/images/HV1_compressed.jpg",
     link: "projects/homo_videns.html"
+  },
+  {
+    id: "palida",
+    year: 2020,
+    title: { en: "Nicolás y los Fumadores - La pálida", es: "Nicolás y los Fumadores - La pálida" },
+    meta: { en: "2020 · music video", es: "2020 · videoclip" },
+    image: "assets/images/LP_0.jpg",
+    link: "projects/palida.html"
+  },
+  {
+    id: "desapego",
+    year: 2019,
+    title: { en: "Conjuro Epiléptico - Hoy me desapego", es: "Conjuro Epiléptico - Hoy me desapego" },
+    meta: { en: "2019 · music video", es: "2019 · videoclip" },
+    image: "assets/images/desapego.jpg",
+    link: "projects/desapego.html"
+  },
+  {
+    id: "sangra",
+    year: 2018,
+    title: { en: "Los Bliss - Sangra", es: "Los Bliss - Sangra" },
+    meta: { en: "2018 · music video", es: "2018 · videoclip" },
+    image: "assets/images/sangra.jpg",
+    link: "projects/sangra.html"
   },
   {
     id: "bailar_triste",

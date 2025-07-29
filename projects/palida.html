@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sereno (serene wind) – Andrés Isaza Giraldo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-detail-container {
+            max-width: 1000px;
+            margin: 4rem auto 0 auto;
+            background: #232323;
+            border-radius: 12px;
+            padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+        }
+        .project-detail-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-transform: lowercase;
+        }
+        .project-detail-meta {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.2rem;
+        }
+        .project-detail-desc {
+            color: #cccccc;
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+        .project-detail-media {
+            width: 100%;
+            margin-bottom: 2rem;
+            aspect-ratio: 16/9;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .project-detail-media img, .project-detail-media video, .project-detail-media iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            display: block;
+        }
+        .project-detail-section {
+            margin-bottom: 2rem;
+        }
+        .project-detail-section h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            text-transform: lowercase;
+        }
+        .back-btn {
+            display: inline-block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            bottom: auto;
+            z-index: 1001;
+            margin: 0;
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.4rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .project-poster {
+            width: 260px;
+            margin: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            align-self: flex-start;
+        }
+        .project-main-info {
+            flex: 1;
+        }
+        .project-stills {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3.5rem;
+        }
+        .project-stills img {
+            width: 100%;
+            min-width: 0;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .project-credits {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .project-awards {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 0;
+        }
+        .project-awards h4 {
+            margin-bottom: 1.2rem;
+            margin-left: 1.5rem;
+        }
+        .project-review {
+            font-style: italic;
+            color: #e0e0e0;
+            margin-bottom: 3.5rem;
+            padding-left: 0;
+            text-align: justify;
+            border-left: none;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-size: 1em;
+            position: relative;
+        }
+        .project-review .quote-mark {
+            font-size: 2em;
+            color: #b0b0b0;
+            vertical-align: top;
+            line-height: 0.5;
+        }
+        .project-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .project-awards ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+        .project-awards ul li {
+            margin-bottom: 0.3rem;
+        }
+        .language-nav {
+            position: static;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0.7rem;
+            padding-bottom: 0.2rem;
+        }
+        .lang-btn {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .lang-btn.active,
+        .lang-btn:focus {
+            background: #5a5a5a;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 200;
+            padding: 0 2rem;
+            background: transparent;
+            backdrop-filter: none;
+            min-height: 4.2rem;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .nav-bar {
+                padding: 0 0.5rem;
+                min-height: 4.2rem;
+            }
+            .language-nav {
+                padding-top: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-bar {
+                flex-direction: column;
+                align-items: flex-end;
+                min-height: unset;
+                padding: 1.1rem 0.7rem 0 0; /* more top padding to match back button spacing */
+            }
+            .language-nav {
+                justify-content: flex-end;
+                padding-top: 0.1rem;
+                padding-bottom: 0.1rem;
+                width: 100%;
+                display: flex;
+                margin-right: 0.2rem;
+                gap: 0.2rem; /* match main page button closeness */
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+                padding: 0.18rem 0.7rem;
+            }
+            .project-detail-container {
+                margin-top: 1.4rem;
+            }
+        }
+        @media (max-width: 700px) {
+            .project-flex {
+                flex-direction: column;
+                gap: 1.2rem;
+                align-items: center;
+            }
+            .project-main-info {
+                width: 100%;
+                text-align: left;
+            }
+            .project-detail-container { padding: 1rem; }
+            .project-poster {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                margin-bottom: 1.2rem !important;
+                float: none !important;
+                max-width: 220px;
+                width: 100%;
+            }
+            .project-stills { flex-direction: column; gap: 1rem; }
+            .project-stills img { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navigation Bar -->
+    <div class="nav-bar">
+        <nav class="language-nav">
+            <button class="lang-btn active" data-lang="en">en</button>
+            <button class="lang-btn" data-lang="es">es</button>
+        </nav>
+    </div>
+    <a href="../index.html" class="back-btn">← back to projects</a>
+    <div class="project-detail-container">
+        <div class="project-flex">
+            <div class="project-main-info">
+                <h1 class="project-detail-title">Nicolás y los Fumadores - La pálida</h1>
+                <div class="project-detail-meta" id="meta-en" style="display:block;">2020 · 5'54'' · Music video</div>
+                <div class="project-detail-meta" id="meta-es" style="display:none;">2020 · 5'54'' · Videoclip</div>
+                <div class="project-credits" id="credits-en" style="display:block;">
+                    <strong>Cinematography:</strong> Juanita Ortega y Lina Garavito<br>
+                    <strong>Art director:</strong> Lina Méndez<br>
+                    <strong>Field producer:</strong> Paula Pedraza<br>
+                    <strong>Editing:</strong> Juan Carlos Sánchez<br>
+                </div>
+                <div class="project-credits" id="credits-es" style="display:none;">
+                    <strong>Fotografía:</strong> Juanita Ortega y Lina Garavito<br>
+                    <strong>Dirección de arte:</strong> Lina Méndez<br>
+                    <strong>Productora de campo:</strong> Paula Pedraza<br>
+                    <strong>Montaje:</strong> Juan Carlos Sánchez<br>
+                </div>
+            </div>
+        </div>
+        <div class="project-detail-media">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/yGneelzmbY8" title="Nicolás y los Fumadores - La pálida" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
+    <script src="../js/language.js"></script>
+    <script>
+     function updateLanguageUI(lang) {
+         document.querySelectorAll('.lang-btn').forEach(btn => {
+             btn.classList.remove('active');
+             if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+         });
+         document.querySelectorAll('[id^="desc-"], [id^="meta-"], [id^="credits-"]').forEach(el => {
+             if (el.id.endsWith(lang)) {
+                 el.style.display = 'block';
+             } else {
+                 el.style.display = 'none';
+             }
+         });
+     }
+     function initializeLanguageUniversal() {
+         const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+         updateLanguageUI(savedLang);
+         document.querySelectorAll('.lang-btn').forEach(btn => {
+             btn.addEventListener('click', function() {
+                 const lang = this.getAttribute('data-lang');
+                 localStorage.setItem('selectedLanguage', lang);
+                 updateLanguageUI(lang);
+             });
+         });
+     }
+     document.addEventListener('DOMContentLoaded', initializeLanguageUniversal);
+     if (document.readyState !== 'loading') initializeLanguageUniversal();
+     window.addEventListener('storage', function(e) {
+         if (e.key === 'selectedLanguage') {
+             updateLanguageUI(localStorage.getItem('selectedLanguage') || 'en');
+         }
+     });
+      // Lightbox
+      document.querySelectorAll('.lightbox-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const imgSrc = this.getAttribute('data-img');
+            const overlay = document.getElementById('lightbox-overlay');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            overlay.style.display = 'flex';
+        });
+    });
+    document.getElementById('lightbox-overlay').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('lightbox-img').src = '';
+    });
+    </script>
+</body>
+</html>
