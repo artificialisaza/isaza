@@ -118,24 +118,36 @@ function renderProjects(lang) {
   const container = document.getElementById('project-list');
   if (!container) return;
   container.innerHTML = '';
-  sorted.forEach(project => {
+  
+  // Render projects with optimized image loading
+  sorted.forEach((project, index) => {
     const card = document.createElement('a');
     card.href = project.link;
     card.className = 'project-link';
     const projectItem = document.createElement('div');
     projectItem.className = 'project-item';
+    
+    // Use fetchpriority="high" for the first few projects (above the fold)
+    const isAboveFold = index < 3;
+    const fetchPriority = isAboveFold ? 'high' : 'low';
+    
     projectItem.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
     projectItem.innerHTML = `
       <h3>${project.title[lang]}</h3>
       <p class="project-meta">${project.meta[lang]}</p>
     `;
     
-    // Add hover effect
+    // Add hover effect with debouncing for better performance
+    let hoverTimeout;
     projectItem.addEventListener('mouseenter', function() {
-      this.style.background = `linear-gradient(rgba(30,30,30,0.5), rgba(30,30,30,0.6)), url('${project.image}') center center/cover no-repeat`;
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(() => {
+        this.style.background = `linear-gradient(rgba(30,30,30,0.5), rgba(30,30,30,0.6)), url('${project.image}') center center/cover no-repeat`;
+      }, 50);
     });
     
     projectItem.addEventListener('mouseleave', function() {
+      clearTimeout(hoverTimeout);
       this.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
     });
     
