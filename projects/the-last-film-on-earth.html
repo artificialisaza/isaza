@@ -308,44 +308,24 @@
         </div>
         <div class="project-detail-section project-awards">
             <h4>selections and awards</h4>
-            <ul></ul>
+            <ul>
+                <li>2023 Ibero-American Short Film Competition - FIC.UBA (Argentina)</li>
+                <li>2023 Official Selection - Festival Internacional de Medios Alternativos FICMA (México)</li>
+                <li>2023 National Experimental Competition - Bogotá International Short Film Festival Bogoshorts (Colombia)</li>
+                <li>2024 International Competition - Stuttgarter Filmwinter (Alemania)</li>
+                <li>2024 International Competition - West Virginia Mountaineer Film Festival (Estados Unidos)</li>
+                <li>2024 Porosa Animation - Porosa Animation Curatorship at Cinemateca de Bogotá</li>
+                <li>2024 Official Selection - Festival Internacional de Cortometrajes Cine a la Calle, Barranquilla</li>
+                <li>2024 Colombian Short Films - Bogotá International Experimental Film Festival</li>
+                <li>2024 Official Selection - Narrar el Futuro: Festival de Cine & Nuevos Medios</li>
+                <li>2024 Artificial Intelligence Competition - Courant3D Festiva (France)</li>
+            </ul>
         </div>
     </div>
     <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
     <script src="../js/language.js"></script>
     <script>
-    function updateLanguageUI(lang) {
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
-        });
-        document.querySelectorAll('[id^="desc-"], [id^="meta-"], [id^="credits-"]').forEach(el => {
-            if (el.id.endsWith(lang)) {
-                el.style.display = 'block';
-            } else {
-                el.style.display = 'none';
-            }
-        });
-    }
-    function initializeLanguageUniversal() {
-        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
-        updateLanguageUI(savedLang);
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                localStorage.setItem('selectedLanguage', lang);
-                updateLanguageUI(lang);
-            });
-        });
-    }
-    document.addEventListener('DOMContentLoaded', initializeLanguageUniversal);
-    if (document.readyState !== 'loading') initializeLanguageUniversal();
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'selectedLanguage') {
-            updateLanguageUI(localStorage.getItem('selectedLanguage') || 'en');
-        }
-    });
-    // Lightbox
+    // Lightbox functionality
     document.querySelectorAll('.lightbox-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();

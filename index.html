@@ -42,6 +42,26 @@
         <section id="publications" class="tab-content">
             <div class="publication-list">
                 <!-- 2025 -->
+                <!-- Modeling Water Perspectivism into a Digital Experience -->
+                <div class="publication-item">
+                    <a href="https://data.doi.or.kr/10.23362/KOEN2025.07.25.2.165" class="publication-title" target="_blank" rel="noopener noreferrer">
+                        Modeling Water Perspectivism into a Digital Experience
+                    </a>
+                    <div class="publication-authors">
+                        Andrés Isaza-Giraldo, Paulo Bala, Terhi Marttila, Rafaela Nunes and Pedro Campos
+                    </div>
+                    <div class="publication-venue">
+                        Proceedings of the International Symposium on Electronic/Emerging Art: 2025, Seoul, Republic of Korea, Art Center Nabi, Institute for Culture and Arts Seoul National University, 2025, pp. 1124-1128
+                    </div>
+                    <div class="publication-abstract" data-translate="pub11.abstract">
+                        <span class="abstract-text">Indigenous worldviews place humans as deeply interconnected to nature. However, digital materials often limit the production of non human-centric experiences. Building on work that places perspectivism as a core tenet for artistic creation, we explore thinking from the perspective of water in the creation Being Water, an interactive experience representative of confluence of different digital media. This collaboration demonstrates how digital media can simulate and express the agency of non-human entities, challenging human-centric design paradigms. The project incorporates diverse artistic approaches, such as immersive video capturing by rivers and seas, poetic narratives inspired by the water cycle, and AI-generated visuals. Supporting and incorporating Large Language Models in the creative process, we reflect on the role of machines as tools for perspectivism while highlighting the limitations of current AI systems in representing other ontological perspectives.</span>
+                        <img src="assets/images/ISEA_water.jpg" alt="Modeling Water Perspectivism into a Digital Experience" class="publication-image-wide" loading="lazy" />
+                    </div>
+                    <br>
+                    <div class="publication-downloads">
+                        <a href="https://www.isea-symposium-archives.org/symposium/isea2025-30th-international-symposium-on-electronic-art/" target="_blank" rel="noopener noreferrer" class="publication-pdf-link">Access the proceeding</a>
+                    </div>
+                </div>
                 <!-- En-join: Speculative LLM Play for Energy Community Engagement and Sustainability Awareness -->
                 <div class="publication-item">
                     <a href="https://doi.org/10.1145/3715668.3735600" class="publication-title" target="_blank" rel="noopener noreferrer">
@@ -144,6 +164,26 @@
                     </div>
                 </div>
                 <!-- 2024 -->
+                <!-- EN-JOIN: Exploring Inclusive Visuals for a Game to Give Perspective on Energy Communities -->
+                <div class="publication-item">
+                    <a href="https://doi.org/10.1007/978-3-031-97257-7_13" class="publication-title" target="_blank" rel="noopener noreferrer">
+                        EN-JOIN: Exploring Inclusive Visuals for a Game to Give Perspective on Energy Communities
+                    </a>
+                    <div class="publication-authors">
+                        Anna Jiskrová, Andrés Isaza-Giraldo, Pedro Campos, Vanessa Cesário
+                    </div>
+                    <div class="publication-venue">
+                        ArtsIT, Interactivity and Game Creation (ArtsIT 2024), Springer Nature Switzerland, Cham, 2026, pp. 189-199
+                    </div>
+                    <div class="publication-abstract" data-translate="pub12.abstract">
+                        <img src="assets/images/artsIT_enjoin.jpg" alt="EN-JOIN: Exploring Inclusive Visuals for a Game to Give Perspective on Energy Communities" class="pub-thumb-large" loading="lazy" />
+                        <span class="abstract-text">This research explores the significance of visual elements – specifically graphics and illustrations – in serious games designed for educational purposes, targeting teenagers. The paper focuses on the applicability of design elements to enhance engagement in a game currently in development that educates about energy communities. The game, EN-JOIN, uses a text-based interface where players interact by typing answers, which are evaluated by a Large Language Model (LLM). This interactive "conversation" guides players through various levels, contributing to the storyline and educational objectives. Our approach incorporates inclusive design, emphasizing the portrayal of diverse cultures, genders, and identities. By leveraging simplified, symbolic visuals, we aim to create an engaging and empathetic experience without overwhelming players. This study addresses the challenges of balancing complexity and simplicity in visual design, ensuring that characters and scenarios are relatable yet free from stereotypes. The game aims to make players aware of their environmental impact and encourages them to engage with sustainable energy practices.</span>
+                    </div>
+                    <br>
+                    <div class="publication-downloads">
+                        <a href="https://doi.org/10.1007/978-3-031-97257-7_13" target="_blank" rel="noopener noreferrer" class="publication-pdf-link">Access the paper</a>
+                    </div>
+                </div>
                 <!-- Espelhos Fluidos : Filmar os Rios do Futuro -->
                 <div class="publication-item">
                     <a href="https://repositorio.ulisboa.pt/handle/10400.5/95713" class="publication-title" target="_blank" rel="noopener noreferrer">
@@ -308,6 +348,17 @@
             border-radius: 0;
             box-shadow: 0 1px 4px rgba(0,0,0,0.1);
             cursor: zoom-in;
+            object-fit: contain;
+        }
+        .pub-thumb-large {
+            float: left;
+            margin: 0 18px 12px 0;
+            width: 544px;
+            height: auto;
+            border-radius: 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            cursor: zoom-in;
+            object-fit: contain;
         }
         .publication-video-container {
             float: left;
@@ -344,6 +395,27 @@
             border-radius: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.10);
             cursor: zoom-in;
+            object-fit: contain;
+        }
+        .publication-image-wide {
+            width: 544px;
+            height: auto;
+            display: block;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            margin: 2rem auto 1rem auto;
+            cursor: zoom-in;
+            object-fit: contain;
+        }
+        .publication-image-narrow {
+            width: 50%;
+            height: auto;
+            display: block;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            margin: 2rem auto 1rem auto;
+            cursor: zoom-in;
+            object-fit: contain;
         }
         @media (max-width: 700px) {
   .publication-video-container {
@@ -374,11 +446,16 @@
     margin-top: 0 !important;
   }
   .publication-image-left,
-  .pub-thumb {
+  .pub-thumb,
+  .pub-thumb-large,
+  .publication-image-wide,
+  .publication-image-narrow {
     display: block !important;
     margin: 0 auto 1.2rem auto !important;
     float: none !important;
     max-width: 90vw;
+    height: auto !important;
+    object-fit: contain !important;
   }
 }
         </style>
@@ -436,9 +513,9 @@
     <script src="js/projectsData.js"></script>
     <script src="js/main.js"></script>
     <script>
-    // Make .pub-thumb images open in the lightbox overlay
+    // Make .pub-thumb and .publication-image-wide images open in the lightbox overlay
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.pub-thumb').forEach(function(img) {
+        document.querySelectorAll('.pub-thumb, .pub-thumb-large, .publication-image-wide, .publication-image-narrow').forEach(function(img) {
             img.addEventListener('click', function() {
                 var lightbox = document.getElementById('lightbox-overlay');
                 var lightboxImg = document.getElementById('lightbox-img');
