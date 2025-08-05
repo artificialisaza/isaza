@@ -400,11 +400,11 @@ function setLanguage(lang) {
     if (publicationsLink) publicationsLink.textContent = translations[lang].publications;
     if (bioLink) bioLink.textContent = translations[lang].bio;
     
-    // Update bio content
-    const bioContent = document.getElementById('bio-content');
-    if (bioContent) {
-        bioContent.innerHTML = translations[lang][`bio_${lang}`] || translations[lang].bio_en;
-    }
+    // Update bio content using class-based approach
+    document.querySelectorAll('.bio-lang').forEach(function(div) {
+        div.classList.remove('active');
+    });
+    document.querySelector(`.bio-lang.bio-lang-${lang}`).classList.add('active');
     
     // Update project titles and meta
     const projectElements = document.querySelectorAll('.project-item');
