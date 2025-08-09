@@ -293,10 +293,10 @@
                 </div>
             </div>
         </div>
-        <div class="project-detail-media video-es">
+        <div class="project-detail-media video-es" id="video-es" style="display:block;">
             <iframe src="https://player.vimeo.com/video/836108696?title=1" style="width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Trailer (SPA)"></iframe>
         </div>
-        <div class="project-detail-media video-en" style="display:none;">
+        <div class="project-detail-media video-en" id="video-en" style="display:none;">
             <iframe src="https://www.youtube.com/embed/fmgTF8yTOkQ" style="width:100%;height:100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Trailer (ENG)"></iframe>
         </div>
         <div class="project-review">
@@ -323,8 +323,40 @@
         </div>
     </div>
     <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
-    <script src="../js/language.js"></script>
     <script>
+    // Universal language toggle for all pages
+    function updateLanguageUI(lang) {
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+        });
+        document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
+        document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
+        document.getElementById('meta-en').style.display = (lang === 'en') ? 'block' : 'none';
+        document.getElementById('meta-es').style.display = (lang === 'es') ? 'block' : 'none';
+        document.getElementById('video-en').style.display = (lang === 'en') ? 'block' : 'none';
+        document.getElementById('video-es').style.display = (lang === 'es') ? 'block' : 'none';
+    }
+    function initializeLanguageUniversal() {
+        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+        updateLanguageUI(savedLang);
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                localStorage.setItem('selectedLanguage', lang);
+                updateLanguageUI(lang);
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', initializeLanguageUniversal);
+    if (document.readyState !== 'loading') initializeLanguageUniversal();
+    // Multi-tab sync: update language UI if localStorage changes
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'selectedLanguage') {
+            updateLanguageUI(localStorage.getItem('selectedLanguage') || 'en');
+        }
+    });
+    
     // Lightbox functionality
     document.querySelectorAll('.lightbox-link').forEach(link => {
         link.addEventListener('click', function(e) {

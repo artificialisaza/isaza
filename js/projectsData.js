@@ -64,14 +64,7 @@ const projects = [
     image: "assets/images/LP_0.jpg",
     link: "projects/palida.html"
   },
-  {
-    id: "desapego",
-    year: 2019,
-    title: { en: "Conjuro Epiléptico - Hoy me desapego", es: "Conjuro Epiléptico - Hoy me desapego" },
-    meta: { en: "2019 · music video", es: "2019 · videoclip" },
-    image: "assets/images/desapego.jpg",
-    link: "projects/desapego.html"
-  },
+
   {
     id: "sangra",
     year: 2018,
@@ -83,7 +76,7 @@ const projects = [
   {
     id: "bailar_triste",
     year: 2018,
-    title: { en: "Bailando triste", es: "Bailando triste" },
+    title: { en: "Nicolás y los Fumadores - Bailando triste", es: "Nicolás y los Fumadores - Bailando triste" },
     meta: { en: "2018 · music video", es: "2018 · videoclip" },
     image: "assets/images/BT2.jpg",
     link: "projects/bailar_triste.html"

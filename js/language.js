@@ -44,10 +44,7 @@ const translations = {
             title: 'Bailando triste',
             meta: '2018 · music video'
         },
-        project9: {
-            title: 'medias blancas',
-            meta: '2017 · fiction short film'
-        },
+
         // Project detail page translations
         'the-last-film-on-earth': {
             title: 'The Last Film on Earth',
@@ -182,10 +179,7 @@ const translations = {
             title: 'Bailando triste',
             meta: '2018 · videoclip'
         },
-        project9: {
-            title: 'medias blancas',
-            meta: '2017 · cortometraje de ficción'
-        },
+
         // Project detail page translations
         'the-last-film-on-earth': {
             title: 'La última película',
