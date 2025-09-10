@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Being Water – Andrés Isaza Giraldo</title>
+    <title>the_last_movie_on_earth_run_1 – Andrés Isaza Giraldo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -23,6 +23,7 @@
             margin-bottom: 0.5rem;
             color: #fff;
             text-transform: lowercase;
+            word-break: break-all;
         }
         .project-detail-meta {
             font-size: 1.1rem;
@@ -34,9 +35,6 @@
             font-size: 1rem;
             margin-bottom: 2rem;
             text-align: justify;
-        }
-        .project-credits {
-            margin-bottom: 1.5rem;
         }
         .project-detail-section {
             margin-bottom: 2rem;
@@ -190,12 +188,14 @@
         }
         @media (max-width: 700px) {
             .project-flex { flex-direction: column; gap: 1.2rem; }
-            .project-detail-container { padding: 1rem; }
+            .project-detail-container {
+                padding: 1rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                box-sizing: border-box;
+            }
             .project-stills { grid-template-columns: 1fr; gap: 1rem; }
             .project-stills img { width: 100%; height: 150px; }
-        }
-        .project-fullwidth-image {
-            margin-bottom: 2rem;
         }
         .project-fullwidth-image img {
             width: 100%;
@@ -256,76 +256,185 @@
     <div class="project-detail-container">
         <div class="project-flex">
             <div class="project-main-info">
-                <h1 class="project-detail-title">Being Water</h1>
-                <div class="project-detail-meta">2024 · interactive experience</div>
-                <div class="project-credits" id="credits-en" style="display:block;">
-                    <p><strong>Collaborative work with:</strong> Tehri Matilla, Rafaela Nuines and Paulo Bala</p>
-                </div>
-                <div class="project-credits" id="credits-es" style="display:none;">
-                    <p><strong>Trabajo colaborativo con:</strong> Tehri Matilla, Rafaela Nuines y Paulo Bala</p>
-                </div>
+                <h1 class="project-detail-title">santas postales</h1>
+                <div class="project-detail-meta">2021 · series of plastified inkjet prints</div>
                 <div class="project-detail-desc" id="desc-en" style="display:block;">
-                    <p>Being water is an interactive and immersive space in which we are invited to see, feel and think in the perspective of water. What could waterbeings say about the world they inhabit and about the essential water that flows through all living things?</p>
+                    <p>Santas postales was a card project created in 2021. Each card was printed 10 times, except for La leyenda de Juanita, which had 20. All cards were sold and are now with their current owners.</p>
                 </div>
                 <div class="project-detail-desc" id="desc-es" style="display:none;">
-                    <p>Being Water es un espacio interactivo e inmersivo en el que somos invitados a ver, sentir y pensar desde la perspectiva del agua. ¿Qué podrían decir los seres de agua sobre el mundo que habitan y sobre el agua esencial que fluye a través de todos los seres vivos?</p>
+                    <p>Santas postales fue un proyecto de tarjetas creadas en 2021. Cada tarjeta fue imprimida 10 veces, excepto la de La leyenda de Juanita que tuvo 20. Todas las tarjetas fueron vendidas y están con sus actuales coleccionadores.</p>
                 </div>
             </div>
         </div>
-        <div class="project-fullwidth-image">
-            <img src="../assets/images/Being_Water_Still_1_compressed.jpg" alt="Being Water Still 1" />
-        </div>
-        <div class="project-fullwidth-image">
-            <img src="../assets/images/Being_Water_Still_3_compressed.jpg" alt="Being Water Still 3" />
-        </div>
-        <div class="project-detail-section project-awards">
-            <h4>exhibitions</h4>
-            <ul>
-                <li>Corrientes Art Exhibition at Internacional Conference on Interactive Digital Storytelling (ICIDS), Barranquilla, Colombia, 2024</li>
-            </ul>
-        </div>
-        <div class="project-video">
-            <div style="padding:62.5% 0 0 0;position:relative;">
-                <iframe src="https://player.vimeo.com/video/983859597?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Being-Water (Demo) - Interaction Video"></iframe>
+
+        <!-- Card Grid for Santas Postales -->
+    <div class="cards-grid-container">
+        <div class="cards-grid">
+            <div class="card-flip" data-index="1">
+                <img class="card-front" src="../assets/images/santas_postales/01_front.png" alt="Card 1 front" />
+                <img class="card-back" src="../assets/images/santas_postales/01_back.png" alt="Card 1 back" />
             </div>
-            <script src="https://player.vimeo.com/api/player.js"></script>
-        </div>
-        <div class="project-nft-link">
-            <p>Play demo (for computer only) at: <a href="https://paulobala.github.io/being-water/" target="_blank" rel="noopener noreferrer">paulobala.github.io/being-water/</a></p>
+            <div class="card-flip" data-index="2">
+                <img class="card-front" src="../assets/images/santas_postales/02_front.png" alt="Card 2 front" />
+                <img class="card-back" src="../assets/images/santas_postales/02_back.png" alt="Card 2 back" />
+            </div>
+            <div class="card-flip" data-index="3">
+                <img class="card-front" src="../assets/images/santas_postales/03_front.png" alt="Card 3 front" />
+                <img class="card-back" src="../assets/images/santas_postales/03_back.png" alt="Card 3 back" />
+            </div>
+            <div class="card-flip" data-index="4">
+                <img class="card-front" src="../assets/images/santas_postales/04_front.png" alt="Card 4 front" />
+                <img class="card-back" src="../assets/images/santas_postales/04_back.png" alt="Card 4 back" />
+            </div>
+            <div class="card-flip" data-index="5">
+                <img class="card-front" src="../assets/images/santas_postales/05_front.png" alt="Card 5 front" />
+                <img class="card-back" src="../assets/images/santas_postales/05_back.png" alt="Card 5 back" />
+            </div>
         </div>
     </div>
-    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
+    <!-- Lightbox overlay for future use -->
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;">
+        <img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" />
+    </div>
+    </div>
+    
+    <style>
+    .cards-grid-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 2.5rem 0 3rem 0;
+    }
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, max-content);
+        gap: 2.2rem 2.2rem;
+        justify-items: center;
+        align-items: center;
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .cards-grid .card-flip {
+        max-width: 320px;
+        width: 100%;
+    }
+    .cards-grid .card-flip:nth-child(5) {
+        grid-column: 1 / span 2;
+        justify-self: center;
+    }
+    .card-flip {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+        perspective: 1200px;
+        vertical-align: top;
+        max-width: 320px;
+    }
+    .card-flip img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+        transition: opacity 0.3s, box-shadow 0.2s;
+        backface-visibility: hidden;
+        position: static;
+        max-width: 100%;
+    }
+    .card-flip .card-front {
+        z-index: 2;
+        opacity: 1;
+        transition: opacity 0.3s;
+        position: relative;
+    }
+    .card-flip .card-back {
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s;
+        position: absolute;
+        left: 0; top: 0;
+    }
+    .card-flip.flipped .card-front {
+        opacity: 0;
+    }
+    .card-flip.flipped .card-back {
+        opacity: 1;
+        z-index: 2;
+    }
+    @media (max-width: 900px) {
+        .cards-grid {
+            gap: 1.2rem 1.2rem;
+        }
+    }
+    @media (max-width: 700px) {
+        .cards-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(5, max-content);
+            gap: 1.1rem 0;
+        }
+        .cards-grid .card-flip:nth-child(5) {
+            grid-column: 1;
+        }
+        .card-flip {
+            width: 100%;
+            max-width: 100vw;
+        }
+        .card-flip img {
+            width: 100%;
+            max-width: 100vw;
+        }
+    }
+    </style>
     <script>
-    // Universal language toggle for all pages
-    function updateLanguageUI(lang) {
+    // Custom language system for Last Run page
+    // This page uses its own content structure, not the centralized translations
+    
+    // Set initial language state based on localStorage
+    function initializeLanguage() {
+        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+        
+        // Update button states
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.classList.remove('active');
-            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            if (btn.getAttribute('data-lang') === savedLang) {
+                btn.classList.add('active');
+            }
         });
-        document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
-        document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
-        document.getElementById('credits-en').style.display = (lang === 'en') ? 'block' : 'none';
-        document.getElementById('credits-es').style.display = (lang === 'es') ? 'block' : 'none';
+        
+        // Set content visibility
+        document.getElementById('desc-en').style.display = (savedLang === 'en') ? 'block' : 'none';
+        document.getElementById('desc-es').style.display = (savedLang === 'es') ? 'block' : 'none';
     }
-    function initializeLanguageUniversal() {
-        const savedLang = localStorage.getItem('selectedLanguage') || 'en';
-        updateLanguageUI(savedLang);
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                localStorage.setItem('selectedLanguage', lang);
-                updateLanguageUI(lang);
-            });
+    
+    // Language toggle that integrates with the main language.js system
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            
+            // Update localStorage to sync with main page
+            localStorage.setItem('selectedLanguage', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Toggle content visibility
+            document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
+            document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
         });
-    }
-    document.addEventListener('DOMContentLoaded', initializeLanguageUniversal);
-    if (document.readyState !== 'loading') initializeLanguageUniversal();
-    // Multi-tab sync: update language UI if localStorage changes
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'selectedLanguage') {
-            updateLanguageUI(localStorage.getItem('selectedLanguage') || 'en');
-        }
     });
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initializeLanguage);
+    
+    // Fallback initialization
+    if (document.readyState !== 'loading') {
+        initializeLanguage();
+    }
     
     // Lightbox
     document.querySelectorAll('.lightbox-link').forEach(link => {
@@ -342,6 +451,28 @@
         this.style.display = 'none';
         document.getElementById('lightbox-img').src = '';
     });
+    // Card flip interactivity for Santas Postales
+    document.querySelectorAll('.card-flip').forEach(card => {
+        let isFlipped = false;
+        // Hover for desktop
+        card.addEventListener('mouseenter', function() {
+            if (!isFlipped) card.classList.add('flipped');
+        });
+        card.addEventListener('mouseleave', function() {
+            if (!isFlipped) card.classList.remove('flipped');
+        });
+        // Click/tap to toggle
+        card.addEventListener('click', function(e) {
+            isFlipped = !isFlipped;
+            card.classList.toggle('flipped');
+        });
+        // Touch for mobile (toggle on tap)
+        card.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            isFlipped = !isFlipped;
+            card.classList.toggle('flipped');
+        });
+    });
     </script>
 </body>
-</html> 
+</html>
