@@ -578,7 +578,7 @@ body {
     margin: 0; /* remove any extra margins */
 }
 .publication-downloads {
-    margin-top: 0.2rem; /* keep close to preceding content so it can sit beside floats */
+    margin-top: 0; /* keep close to preceding content so it can sit beside floats */
     overflow: visible; /* allow wrap next to floated media */
 }
 .publication-downloads br { display: none; }
@@ -588,7 +588,7 @@ body {
 .publication-abstract {
     color: #cccccc;
     font-size: 1.05rem;
-    margin-top: 0.5rem;
+    margin-top: 0;
     line-height: 1.6;
     transition: max-height 0.3s ease;
     overflow: visible; /* allow content after to flow next to floated media */
@@ -603,7 +603,7 @@ body {
 /* Toggle link/button for abstracts */
 .abstract-toggle {
     display: block;
-    margin: 0.4rem 0 0.6rem 0;
+    margin: 0.2rem 0 0.3rem 0;
     color: #cccccc;
     text-decoration: underline;
     cursor: pointer;
