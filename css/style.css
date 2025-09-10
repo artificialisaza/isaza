@@ -5,20 +5,6 @@
     box-sizing: border-box;
 }
 
-/* Image optimization */
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Optimize background images for better loading */
-.project-item {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    will-change: background;
-}
-
 body {
     font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background-color: #1a1a1a; /* Dark grey background */
@@ -213,7 +199,6 @@ body {
     padding: 1.5rem 2rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     transition: box-shadow 0.2s;
-    min-height: 380px;
 }
 
 .project-item:hover {
@@ -499,32 +484,32 @@ body {
 }
 
 .project-link .project-item-sereno:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/SE_STILL_1.jpg') center center/cover no-repeat;
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/SE_STILL_1.jpg') center center/cover no-repeat;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 }
 
 .project-link .project-item-last-run:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/last_run_5.jpg') center center/cover no-repeat !important;
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/last_run_5.jpg') center center/cover no-repeat !important;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 }
 
 .project-link .project-item-last-film:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/LAST_FRAME_01.png') center center/cover no-repeat !important;
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/LAST_FRAME_01.png') center center/cover no-repeat !important;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 }
 
 .project-link .project-item-being-water:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/Being_Water_Still_2_compressed.jpg') center center/cover no-repeat;
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/Being_Water_Still_2_compressed.jpg') center center/cover no-repeat;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 }
 
 .project-link .project-item-homo-videns:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/HV1_compressed.jpg') center center/cover no-repeat;
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/HV1_compressed.jpg') center center/cover no-repeat;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 }
 
 .project-link .project-item-medias-blancas:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/MB Still 2.jpg') center center/cover no-repeat;
+    background: linear-gradient(rgba(20,20,20,0.6), rgba(20,20,20,0.7)), url('../assets/images/MB Still 2.jpg') center center/cover no-repeat;
     box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 } 
 
@@ -580,130 +565,4 @@ body {
     transition: max-height 0.3s ease;
     overflow: hidden;
     text-align: justify;
-} 
-
-.project-item-santas-postales {
-    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/santas_postales/cards_photo_front.jpg') center center/cover no-repeat;
-    color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: relative;
-    min-height: 320px;
-    overflow: hidden;
-}
-.project-item-santas-postales h3,
-.project-item-santas-postales .project-meta,
-.project-item-santas-postales p {
-    position: relative;
-    z-index: 2;
-}
-.project-link .project-item-santas-postales:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/santas_postales/cards_photo_front.jpg') center center/cover no-repeat;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
-} 
-
-.project-item-bailar-triste {
-    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/BT2.jpg') center center/cover no-repeat;
-    color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: relative;
-    min-height: 320px;
-    overflow: hidden;
-}
-.project-item-bailar-triste h3,
-.project-item-bailar-triste .project-meta,
-.project-item-bailar-triste p {
-    position: relative;
-    z-index: 2;
-}
-.project-link .project-item-bailar-triste:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/BT2.jpg') center center/cover no-repeat;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
-}
-
-.project-item-tiranosaurio {
-    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/TR_2.jpg') center center/cover no-repeat;
-    color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: relative;
-    min-height: 320px;
-    overflow: hidden;
-}
-.project-item-tiranosaurio h3,
-.project-item-tiranosaurio .project-meta,
-.project-item-tiranosaurio p {
-    position: relative;
-    z-index: 2;
-}
-.project-link .project-item-tiranosaurio:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/TR_2.jpg') center center/cover no-repeat;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
-}
-
-.project-item-palida {
-    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/LP_0.jpg') center center/cover no-repeat;
-    color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: relative;
-    min-height: 320px;
-    overflow: hidden;
-}
-.project-item-palida h3,
-.project-item-palida .project-meta,
-.project-item-palida p {
-    position: relative;
-    z-index: 2;
-}
-.project-link .project-item-palida:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/LP_0.jpg') center center/cover no-repeat;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
-}
-
-.project-item-desapego {
-    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/desapego.jpg') center center/cover no-repeat;
-    color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: relative;
-    min-height: 320px;
-    overflow: hidden;
-}
-.project-item-desapego h3,
-.project-item-desapego .project-meta,
-.project-item-desapego p {
-    position: relative;
-    z-index: 2;
-}
-.project-link .project-item-desapego:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/desapego.jpg') center center/cover no-repeat;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
-}
-
-.project-item-sangra {
-    background: linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('../assets/images/sangra.jpg') center center/cover no-repeat;
-    color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: relative;
-    min-height: 320px;
-    overflow: hidden;
-}
-.project-item-sangra h3,
-.project-item-sangra .project-meta,
-.project-item-sangra p {
-    position: relative;
-    z-index: 2;
-}
-.project-link .project-item-sangra:hover {
-    background: linear-gradient(rgba(20,20,20,0.5), rgba(20,20,20,0.6)), url('../assets/images/sangra.jpg') center center/cover no-repeat;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.13);
 } 
