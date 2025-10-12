@@ -168,6 +168,28 @@ document.addEventListener('keydown', function(event) {
     }
 }); 
 
+// --- Scroll Position Memory ---
+function saveScrollPosition() {
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    localStorage.setItem('indexScrollPosition', scrollPosition.toString());
+  }
+}
+
+function restoreScrollPosition() {
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+    const savedPosition = localStorage.getItem('indexScrollPosition');
+    if (savedPosition) {
+      // Wait for content to load, then restore position
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedPosition));
+        // Clean up the saved position after restoring
+        localStorage.removeItem('indexScrollPosition');
+      }, 100);
+    }
+  }
+}
+
 // --- Dynamic Project Rendering ---
 function renderProjects(lang) {
   if (typeof projects === 'undefined') return;
@@ -211,6 +233,9 @@ function renderProjects(lang) {
     card.appendChild(projectItem);
     container.appendChild(card);
   });
+  
+  // Restore scroll position after projects are rendered
+  restoreScrollPosition();
 }
 
 // --- Language Switching Integration ---
@@ -231,6 +256,20 @@ window.setLanguage = function(lang) {
 
 document.addEventListener('DOMContentLoaded', function() {
   renderProjects(getCurrentLanguage());
+  
+  // Add scroll position memory for navigation
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+    // Save scroll position before navigating away
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a');
+      if (link && link.href && link.href.includes('projects/')) {
+        saveScrollPosition();
+      }
+    });
+    
+    // Also save on beforeunload for browser back/forward
+    window.addEventListener('beforeunload', saveScrollPosition);
+  }
 });
 
 // Listen for localStorage changes (e.g., language change in another tab or after navigation)
