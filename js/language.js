@@ -286,8 +286,11 @@ const translations = {
 
 // Utility to get project key from URL (e.g., lorem-film.html -> 'sereno' or use filename without extension)
 function getProjectKeyFromURL() {
-    // Example: /projects/lorem-film.html -> 'lorem-film'
-    const match = window.location.pathname.match(/\/projects\/([\w-]+)\.html$/);
+    // Examples:
+    // /projects/lorem-film.html -> 'lorem-film'
+    // /projects/lorem-film -> 'lorem-film'
+    // /projects/lorem-film/ -> 'lorem-film'
+    const match = window.location.pathname.match(/\/projects\/([\w-]+)(?:\.html)?\/?$/);
     if (match) {
         // Map filename to translation key if needed
         if (match[1] === 'lorem-film') return 'sereno';
