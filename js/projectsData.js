@@ -1,6 +1,20 @@
 // Centralized project data for dynamic rendering and translation
 const projects = [
   {
+    id: "reyno",
+    year: 2025,
+    title: {
+      en: "Quadro de la Historia Cyvorg, Mágica y Geológica del Rey-no de Perú",
+      es: "Quadro de la Historia Cyvorg, Mágica y Geológica del Rey-no de Perú"
+    },
+    meta: {
+      en: "2025 · digital intervention · inkjet print",
+      es: "2025 · intervención digital · impresión inkjet"
+    },
+    image: "assets/images/Quadro_lowres_11nov.jpg",
+    link: "projects/reyno.html"
+  },
+  {
     id: "being_water",
     year: 2024,
     title: { en: "Being Water", es: "Being Water" },

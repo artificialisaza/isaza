@@ -190,52 +190,94 @@ function restoreScrollPosition() {
   }
 }
 
+let projectRenderToken = 0;
+
+function preloadTopProjectImages(projectsToPreload) {
+  document.querySelectorAll('link[data-project-preload="true"]').forEach(link => link.remove());
+
+  projectsToPreload.forEach(project => {
+    const preloadLink = document.createElement('link');
+    preloadLink.rel = 'preload';
+    preloadLink.as = 'image';
+    preloadLink.href = project.image;
+    preloadLink.setAttribute('fetchpriority', 'high');
+    preloadLink.setAttribute('data-project-preload', 'true');
+    document.head.appendChild(preloadLink);
+  });
+}
+
+function createProjectCard(project, lang) {
+  const card = document.createElement('a');
+  card.href = project.link;
+  card.className = 'project-link';
+
+  const projectItem = document.createElement('div');
+  projectItem.className = 'project-item';
+  projectItem.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
+  projectItem.innerHTML = `
+      <h3>${project.title[lang]}</h3>
+      <p class="project-meta">${project.meta[lang]}</p>
+    `;
+
+  let hoverTimeout;
+  projectItem.addEventListener('mouseenter', function() {
+    clearTimeout(hoverTimeout);
+    hoverTimeout = setTimeout(() => {
+      this.style.background = `linear-gradient(rgba(30,30,30,0.5), rgba(30,30,30,0.6)), url('${project.image}') center center/cover no-repeat`;
+    }, 50);
+  });
+
+  projectItem.addEventListener('mouseleave', function() {
+    clearTimeout(hoverTimeout);
+    this.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
+  });
+
+  card.appendChild(projectItem);
+  return card;
+}
+
 // --- Dynamic Project Rendering ---
 function renderProjects(lang) {
   if (typeof projects === 'undefined') return;
   const sorted = projects.slice().sort((a, b) => b.year - a.year);
+  const topProjects = sorted.slice(0, 3);
+  const remainingProjects = sorted.slice(3);
+  const currentRenderToken = ++projectRenderToken;
+
+  preloadTopProjectImages(topProjects);
+
   const container = document.getElementById('project-list');
   if (!container) return;
   container.innerHTML = '';
-  
-  // Render projects with optimized image loading
-  sorted.forEach((project, index) => {
-    const card = document.createElement('a');
-    card.href = project.link;
-    card.className = 'project-link';
-    const projectItem = document.createElement('div');
-    projectItem.className = 'project-item';
-    
-    // Use fetchpriority="high" for the first few projects (above the fold)
-    const isAboveFold = index < 3;
-    const fetchPriority = isAboveFold ? 'high' : 'low';
-    
-    projectItem.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
-    projectItem.innerHTML = `
-      <h3>${project.title[lang]}</h3>
-      <p class="project-meta">${project.meta[lang]}</p>
-    `;
-    
-    // Add hover effect with debouncing for better performance
-    let hoverTimeout;
-    projectItem.addEventListener('mouseenter', function() {
-      clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(() => {
-        this.style.background = `linear-gradient(rgba(30,30,30,0.5), rgba(30,30,30,0.6)), url('${project.image}') center center/cover no-repeat`;
-      }, 50);
-    });
-    
-    projectItem.addEventListener('mouseleave', function() {
-      clearTimeout(hoverTimeout);
-      this.style.background = `linear-gradient(rgba(30,30,30,0.72), rgba(30,30,30,0.82)), url('${project.image}') center center/cover no-repeat`;
-    });
-    
-    card.appendChild(projectItem);
-    container.appendChild(card);
+
+  topProjects.forEach(project => {
+    container.appendChild(createProjectCard(project, lang));
   });
-  
-  // Restore scroll position after projects are rendered
-  restoreScrollPosition();
+
+  const appendRemainingProjects = () => {
+    if (currentRenderToken !== projectRenderToken) return;
+
+    if (remainingProjects.length > 0) {
+      const fragment = document.createDocumentFragment();
+      remainingProjects.forEach(project => {
+        fragment.appendChild(createProjectCard(project, lang));
+      });
+      container.appendChild(fragment);
+    }
+
+    restoreScrollPosition();
+  };
+
+  if (remainingProjects.length === 0) {
+    restoreScrollPosition();
+    return;
+  }
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(appendRemainingProjects, { timeout: 200 });
+  } else {
+    setTimeout(appendRemainingProjects, 0);
+  }
 }
 
 // --- Language Switching Integration ---

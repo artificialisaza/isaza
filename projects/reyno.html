@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>isaza - reyno</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-detail-container {
+            max-width: 1100px;
+            margin: 4rem auto 2rem auto;
+            background: #232323;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+        }
+        .project-main-info {
+            margin-bottom: 2rem;
+        }
+        .project-detail-title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            color: #fff;
+        }
+        .project-credits {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+        }
+        .project-detail-meta {
+            font-size: 1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.4rem;
+            line-height: 1.5;
+        }
+        .project-detail-desc {
+            color: #cccccc;
+            font-size: 1rem;
+            text-align: justify;
+            line-height: 1.55;
+            margin-bottom: 2rem;
+        }
+        .project-image-link {
+            display: block;
+            text-decoration: none;
+            cursor: zoom-in;
+        }
+        .project-image {
+            width: 100%;
+            display: block;
+            border-radius: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        .back-btn {
+            display: inline-block;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            margin: 0;
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.4rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .language-nav {
+            position: static;
+            display: flex;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0.7rem;
+            padding-bottom: 0.2rem;
+        }
+        .lang-btn {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            text-transform: lowercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .lang-btn.active,
+        .lang-btn:focus {
+            background: #5a5a5a;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #505050;
+            color: #fff;
+        }
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 200;
+            padding: 0 2rem;
+            background: transparent;
+            min-height: 4.2rem;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .nav-bar {
+                padding: 0 0.5rem;
+                min-height: 4.2rem;
+            }
+            .language-nav {
+                padding-top: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 700px) {
+            .project-detail-container {
+                margin-top: 1.4rem;
+                padding: 1rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-bar {
+                flex-direction: column;
+                align-items: flex-end;
+                min-height: unset;
+                padding: 1.1rem 0.7rem 0 0;
+            }
+            .language-nav {
+                justify-content: flex-end;
+                padding-top: 0.1rem;
+                padding-bottom: 0.1rem;
+                width: 100%;
+                display: flex;
+                margin-right: 0.2rem;
+                gap: 0.2rem;
+            }
+            .lang-btn {
+                font-size: 0.9rem;
+                padding: 0.18rem 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <nav class="language-nav">
+            <button class="lang-btn active" data-lang="en">en</button>
+            <button class="lang-btn" data-lang="es">es</button>
+        </nav>
+    </div>
+
+    <a href="../" class="back-btn">← back to projects</a>
+
+    <div class="project-detail-container">
+        <div class="project-main-info">
+            <h1 class="project-detail-title">Quadro de la Historia Cyvorg, Mágica y Geológica del Rey-no de Perú</h1>
+            <div class="project-credits">Andrés Isaza-Giraldo, borrowing from the work written by José Ignacio de Lequanda and painted by Luis Thiébaut</div>
+            <div class="project-detail-meta" id="meta-en" style="display:block;">Digital intervention with custom diffusion models | Inkjet print on smooth paper | 330 x 118 cm | 2025</div>
+            <div class="project-detail-meta" id="meta-es" style="display:none;">Intervención digital con modelos de difusión personalizados | Impresión inkjet sobre papel liso | 330 x 118 cm | 2025</div>
+            <div class="project-detail-desc" id="desc-en" style="display:block;">
+                In the X𝔦i҉𝔦th century, the Treasury Ministry of king ⍧Ɑʁɼ⌾Ƨ ⟟Λ commissioned the creation of a painting that could definitively capture the colonized territory of 𐌓𐌄𐌐𐌵, which served as the economic engine of his fatuous empire. At that time, a movement against the king was beginning to brew, as he prepared for war. Fearing a revolution, the king imprisoned in the artwork the most powerful beings, who still await the return of the spirit of 𐌌ል𐌍ርꝊ 𐌂ል𐌓ል𐌂 to liberate them.<br><br>
+                But this is not the story of the eighteenth century—it is the story of the future. Centuries after the original painting—that archive of mercantile control dedicated to the Supreme Secretariat of the Royal Treasury of the Indies—the territories still breathe under the weight of an extractivist ontology that never ceased. Colonial mining operations merely changed form: now they fuel data centers instead of galleons, sustain semiconductors instead of crowns. In this rewritten painting, quadrupeds transform into cyborgs on the left and magical beings on the right, facing each other in opposition. Where once there were "civilized" and "savage" nations, now emerge gods, heroes, and legends from Peru's diverse regions—Amazonian spirits, jaguar figures, waterfall entities—summoned not to be catalogued, but to guard their own territories.<br><br>
+                Each image was generated through an iterative diffusion process: a custom model (LoRA) was trained on the 214 original figures from Lequanda and Thiébaut's painting, then each being was reimagined from colonial texts but inhabited by Andean and Amazonian mythologies, territorial materials, and a technological serendipity where the model's glitches revealed new creatures. Between half an hour and three hours per image, sometimes weeks, in a speculative archaeology that doesn't flee from AI's errors—the multiplying paws, the fusing bodies, the South American fauna under-represented in databases—but assumes them as transparency of a process that, like the original, also inhabits distance, rumor, and the imaginary. At the center, where Lequanda placed the mining hill of Gualgayoc, now rises a data center-colonial church: the mine that sustains both cyborg bodies and our own digital complicity.
+            </div>
+            <div class="project-detail-desc" id="desc-es" style="display:none;">
+                En el siglo X𝔦i҉𝔦, el Ministerio de Hacienda del rey ⍧Ɑʁɼ⌾Ƨ ⟟Λ encargó la realización de un cuadro que pudiera capturar definitivamente el territorio colonizado del 𐌓𐌄𐌐𐌵, que servía como motor económico de su fatuo imperio. En aquel entonces, comenzaba a gestarse un movimiento en contra del rey, que se preparaba para una guerra. Por temor a una revolución, el rey apresó en la obra de arte a los seres más poderosos, que aún esperan el regreso del espíritu de 𐌌ል𐌍ርꝊ 𐌂ል𐌓ል𐌂 para liberarlos.<br><br>
+                Pero esta no es la historia del siglo XVIII, es la del futuro. Siglos después de la pintura original —aquel archivo de control mercantil dedicado a la Suprema Secretaría de la Real Hacienda de Indias— los territorios aún respiran bajo el peso de una ontología extractivista que nunca cesó. Las minerías coloniales apenas cambiaron de forma: ahora alimentan centros de datos en vez de galeones, sostienen semiconductores en vez de coronas. En este cuadro reescrito, los cuadrúpedos se transforman en ciborgs a la izquierda y seres mágicos a la derecha, mirándose en oposición. Donde antes había "naciones civilizadas" y "salvajes", emergen ahora dioses, héroes y leyendas de las diversas regiones del Perú —espíritus amazónicos, personajes jaguar, entidades de la cascada— convocados no para ser catalogados, sino para custodiar sus propios territorios.<br><br>
+                Cada imagen fue generada mediante un proceso de difusión iterativa: se entrenó un modelo personalizado (LoRA) con las 214 figuras originales del cuadro de Lequanda y Thiébaut, luego cada ser fue reimaginado a partir de los textos coloniales pero habitado por mitologías andinas y amazónicas, materiales del territorio, y una serendipia tecnológica donde los glitches del modelo revelaron nuevas criaturas. Entre media hora y tres horas por imagen, a veces semanas, en una arqueología especulativa que no huye de los errores de la IA —las patas que se multiplican, los cuerpos que se funden, la fauna sudamericana sub-representada en las bases de datos— sino que los asume como transparencia de un proceso que, tal como el original, también habita la distancia, el rumor y lo imaginario. En el centro, donde Lequanda colocó el cerro minero de Gualgayoc, se erige ahora un centro de datos-iglesia colonial: la mina que sostiene tanto los cuerpos ciborg como nuestra propia complicidad digital.
+            </div>
+        </div>
+
+        <a href="#" class="project-image-link" id="main-image-link" data-full-img="../assets/images/Quadro_midres_11nov.jpg">
+            <img src="../assets/images/Quadro_lowres_11nov.jpg" alt="Quadro de la Historia Cyvorg, Mágica y Geológica del Rey-no de Perú" class="project-image" />
+        </a>
+    </div>
+
+    <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.94);align-items:flex-start;justify-content:flex-start;overflow:auto;box-sizing:border-box;cursor:zoom-out;">
+        <img id="lightbox-img" src="" alt="Expanded artwork" style="width:auto;max-width:none;max-height:none;box-shadow:0 2px 24px rgba(0,0,0,0.5);display:block;" />
+    </div>
+
+    <script src="../js/language.js"></script>
+    <script>
+        const mainImageLink = document.getElementById('main-image-link');
+        const mainImage = mainImageLink.querySelector('img');
+        const overlay = document.getElementById('lightbox-overlay');
+        const overlayImage = document.getElementById('lightbox-img');
+
+        function positionFromClick(clickRatioX, clickRatioY) {
+            const fullWidth = overlayImage.naturalWidth || overlayImage.width;
+            const fullHeight = overlayImage.naturalHeight || overlayImage.height;
+            if (!fullWidth || !fullHeight) return;
+
+            const targetX = fullWidth * clickRatioX;
+            const targetY = fullHeight * clickRatioY;
+            const viewportWidth = overlay.clientWidth;
+            const viewportHeight = overlay.clientHeight;
+
+            let nextScrollLeft = targetX - (viewportWidth / 2);
+            let nextScrollTop = targetY - (viewportHeight / 2);
+
+            const maxScrollLeft = Math.max(0, fullWidth - viewportWidth);
+            const maxScrollTop = Math.max(0, fullHeight - viewportHeight);
+
+            nextScrollLeft = Math.max(0, Math.min(nextScrollLeft, maxScrollLeft));
+            nextScrollTop = Math.max(0, Math.min(nextScrollTop, maxScrollTop));
+
+            overlay.scrollLeft = nextScrollLeft;
+            overlay.scrollTop = nextScrollTop;
+        }
+
+        mainImageLink.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const rect = mainImage.getBoundingClientRect();
+            const clickRatioX = (e.clientX - rect.left) / rect.width;
+            const clickRatioY = (e.clientY - rect.top) / rect.height;
+
+            const clampedRatioX = Math.max(0, Math.min(1, clickRatioX));
+            const clampedRatioY = Math.max(0, Math.min(1, clickRatioY));
+
+            const fullImageSrc = this.getAttribute('data-full-img');
+            overlayImage.src = fullImageSrc;
+            overlay.style.display = 'flex';
+
+            if (overlayImage.complete) {
+                positionFromClick(clampedRatioX, clampedRatioY);
+            } else {
+                overlayImage.onload = function() {
+                    positionFromClick(clampedRatioX, clampedRatioY);
+                    overlayImage.onload = null;
+                };
+            }
+        });
+
+        overlay.addEventListener('click', function() {
+            overlay.style.display = 'none';
+            overlayImage.src = '';
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                overlay.style.display = 'none';
+                overlayImage.src = '';
+            }
+        });
+    </script>
+</body>
+</html>
