@@ -8,8 +8,8 @@ const projects = [
       es: "Quadro de la Historia Cyvorg, Mágica y Geológica del Rey-no de Perú"
     },
     meta: {
-      en: "2025 · digital intervention · inkjet print",
-      es: "2025 · intervención digital · impresión inkjet"
+      en: "2025 · inkjet print",
+      es: "2025 · impresión print"
     },
     image: "assets/images/Quadro_lowres_11nov.jpg",
     link: "projects/reyno.html"
@@ -24,18 +24,10 @@ const projects = [
   },
   {
     id: "the_last_film_on_earth",
-    year: 2023,
-    title: { en: "the last film on earth", es: "La última película" },
-    meta: { en: "2023 · experimental short film", es: "2023 · cortometraje experimental" },
-    image: "assets/images/LAST_FRAME_01.png",
-    link: "projects/the-last-film-on-earth.html"
-  },
-  {
-    id: "last_run",
     year: 2022,
-    title: { en: "last_movie_on_earth_run_1", es: "last_movie_on_earth_run_1" },
-    meta: { en: "2022 · video installation", es: "2022 · instalación de video" },
-    image: "assets/images/last_run_5.jpg",
+    title: { en: "the last film on earth", es: "La última película" },
+    meta: { en: "2022 · transmedia project", es: "2022 · proyecto transmedia" },
+    image: "assets/images/LAST_FRAME_01.png",
     link: "projects/last_run.html"
   },
   {
