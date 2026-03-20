@@ -9,7 +9,7 @@ const projects = [
     },
     meta: {
       en: "2025 · inkjet print",
-      es: "2025 · impresión print"
+      es: "2025 · impresión"
     },
     image: "assets/images/Quadro_lowres_11nov.jpg",
     link: "projects/reyno.html"
