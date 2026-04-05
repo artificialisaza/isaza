@@ -191,6 +191,7 @@ function restoreScrollPosition() {
 }
 
 let projectRenderToken = 0;
+let activeTagFilter = null;
 
 function preloadTopProjectImages(projectsToPreload) {
   document.querySelectorAll('link[data-project-preload="true"]').forEach(link => link.remove());
@@ -237,9 +238,15 @@ function createProjectCard(project, lang) {
 }
 
 // --- Dynamic Project Rendering ---
-function renderProjects(lang) {
+function renderProjects(lang, tagFilter) {
   if (typeof projects === 'undefined') return;
-  const sorted = projects.slice().sort((a, b) => b.year - a.year);
+  let sorted = projects.slice().sort((a, b) => b.year - a.year);
+
+  // Apply tag filter
+  if (tagFilter) {
+    sorted = sorted.filter(p => p.tags && p.tags.includes(tagFilter));
+  }
+
   const topProjects = sorted.slice(0, 3);
   const remainingProjects = sorted.slice(3);
   const currentRenderToken = ++projectRenderToken;
@@ -289,15 +296,43 @@ function getCurrentLanguage() {
 const origSetLanguage = window.setLanguage;
 window.setLanguage = function(lang) {
   if (typeof origSetLanguage === 'function') origSetLanguage(lang);
-  renderProjects(getCurrentLanguage());
+  renderProjects(getCurrentLanguage(), activeTagFilter);
+  updateTagLabels(lang);
   // Update abstract toggle labels to current language
   if (typeof window.refreshAbstractToggleLabels === 'function') {
     window.refreshAbstractToggleLabels(lang);
   }
 };
 
+function updateTagLabels(lang) {
+  document.querySelectorAll('.tag-btn').forEach(btn => {
+    const label = btn.getAttribute('data-label-' + lang);
+    if (label) btn.textContent = label;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  renderProjects(getCurrentLanguage());
+  const lang = getCurrentLanguage();
+  updateTagLabels(lang);
+  renderProjects(lang, activeTagFilter);
+
+  // Tag filter buttons
+  document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const tag = this.getAttribute('data-tag');
+      if (activeTagFilter === tag) {
+        // Deactivate: show all
+        activeTagFilter = null;
+        this.classList.remove('active');
+      } else {
+        // Activate this tag
+        activeTagFilter = tag;
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      }
+      renderProjects(getCurrentLanguage(), activeTagFilter);
+    });
+  });
   
   // Add scroll position memory for navigation
   if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
@@ -317,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Listen for localStorage changes (e.g., language change in another tab or after navigation)
 window.addEventListener('storage', function(e) {
   if (e.key === 'selectedLanguage') {
-    renderProjects(getCurrentLanguage());
+    renderProjects(getCurrentLanguage(), activeTagFilter);
     if (typeof window.refreshAbstractToggleLabels === 'function') {
       window.refreshAbstractToggleLabels(getCurrentLanguage());
     }

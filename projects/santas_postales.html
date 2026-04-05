@@ -389,6 +389,7 @@
         }
     }
     </style>
+    <script src="../js/language.js"></script>
     <script>
     // Custom language system for Last Run page
     // This page uses its own content structure, not the centralized translations
@@ -408,6 +409,8 @@
         // Set content visibility
         document.getElementById('desc-en').style.display = (savedLang === 'en') ? 'block' : 'none';
         document.getElementById('desc-es').style.display = (savedLang === 'es') ? 'block' : 'none';
+        const backBtnInit = document.querySelector('.back-btn');
+        if (backBtnInit) backBtnInit.textContent = (savedLang === 'es') ? '← volver' : '← back to projects';
     }
     
     // Language toggle that integrates with the main language.js system
@@ -425,6 +428,8 @@
             // Toggle content visibility
             document.getElementById('desc-en').style.display = (lang === 'en') ? 'block' : 'none';
             document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) backBtn.textContent = (lang === 'es') ? '← volver' : '← back to projects';
         });
     });
     

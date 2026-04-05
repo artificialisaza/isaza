@@ -450,6 +450,7 @@
     <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;"><img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;box-shadow:0 2px 24px rgba(0,0,0,0.5);" alt="Expanded still" /></div>
 
     <script src="https://player.vimeo.com/api/player.js"></script>
+    <script src="../js/language.js"></script>
     <script>
     function updateLanguageUI(lang) {
         document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -476,6 +477,8 @@
         display('film-review-es', lang === 'es');
         display('run-desc-en', lang === 'en');
         display('run-desc-es', lang === 'es');
+        const backBtn = document.querySelector('.back-btn');
+        if (backBtn) backBtn.textContent = (lang === 'es') ? '← volver' : '← back to projects';
     }
 
     function initializeLanguage() {

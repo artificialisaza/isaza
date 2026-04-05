@@ -295,7 +295,6 @@ function getProjectKeyFromURL() {
         // Map filename to translation key if needed
         if (match[1] === 'lorem-film') return 'sereno';
         if (match[1] === 'the-last-film-on-earth') return 'the-last-film-on-earth';
-        if (match[1] === 'homo_videns') return 'homo-videns';
         // Add more mappings as needed
         return match[1];
     }
@@ -310,6 +309,8 @@ function setLanguageButtonStates(lang) {
             btn.classList.add('active');
         }
     });
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) backBtn.textContent = (lang === 'es') ? '\u2190 volver' : '\u2190 back to projects';
 }
 
 function updatePublicationAbstracts(lang) {

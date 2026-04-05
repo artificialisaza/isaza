@@ -313,6 +313,8 @@
                  el.style.display = 'none';
              }
          });
+         const backBtn = document.querySelector('.back-btn');
+         if (backBtn) backBtn.textContent = (lang === 'es') ? '← volver' : '← back to projects';
      }
      function initializeLanguageUniversal() {
          const savedLang = localStorage.getItem('selectedLanguage') || 'en';

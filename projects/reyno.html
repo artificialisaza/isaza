@@ -98,6 +98,11 @@
             border-radius: 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.10);
         }
+        .lightbox-link {
+            color: transparent;
+            font-size: 0;
+            text-decoration: none;
+        }
         .photo-credit {
             color: #b0b0b0;
             font-size: 0.92rem;
@@ -107,6 +112,8 @@
         .project-image-link {
             display: block;
             text-decoration: none;
+            color: transparent;
+            font-size: 0;
             cursor: zoom-in;
         }
         .project-image {
@@ -160,7 +167,6 @@
         }
         .language-nav {
             position: static;
-            display: flex;
             flex-direction: row;
             gap: 1.2rem;
             align-items: center;
@@ -202,6 +208,7 @@
             z-index: 200;
             padding: 0 2rem;
             background: transparent;
+            backdrop-filter: none;
             min-height: 4.2rem;
             box-sizing: border-box;
         }
@@ -385,6 +392,8 @@
             document.getElementById('desc-es').style.display = (lang === 'es') ? 'block' : 'none';
             document.getElementById('desc-en-rest').style.display = (lang === 'en') ? 'block' : 'none';
             document.getElementById('desc-es-rest').style.display = (lang === 'es') ? 'block' : 'none';
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) backBtn.textContent = (lang === 'es') ? '← volver' : '← back to projects';
         }
 
         function initializeLanguage() {
