@@ -1,0 +1,191 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ThemeCard from '../components/ThemeCard.astro';
+import FlipCard from '../components/FlipCard.astro';
+import TimelineItem from '../components/TimelineItem.astro';
+---
+
+<Layout title="IVÁN CEPEDA 2026 - El Poder de la Verdad" description="Explora de forma divertida el plan de gobierno de Iván Cepeda para 2026">
+	<div class="max-w-4xl mx-auto px-4 py-12">
+		<!-- Hero Section -->
+		<header class="text-center mb-16 space-y-6">
+			<div class="font-mono text-[10px] sm:text-xs text-ph-light whitespace-pre overflow-x-auto text-center flex justify-center hide-scrollbar leading-none">
+{`   _____ _____ _____ ___  ___   _   _ 
+  /  __ \\  ___| ___ \\  ___|  \\ | |
+  | /  \\/ |__ | |_/ / |__ |   \\| |
+  | |   |  __||  __/|  __|| |\\   |
+  | \\__/\\ |___| |   | |___| | \\  |
+   \\____/\\____/\\_|   \\____/\\_| \\_/`}
+			</div>
+			
+			<h1 class="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-ph-light via-purple-300 to-ph-light text-transparent bg-clip-text inline-block animate-pulse">
+				IVÁN CEPEDA PRESIDENTE
+			</h1>
+			
+			<h2 class="text-2xl sm:text-3xl text-gray-200">
+				¡El Poder de la Verdad! ⚡️📖
+			</h2>
+			
+			<div class="bg-gray-900 border-2 border-ph-purple p-6 rounded-2xl shadow-[8px_8px_0px_#904BA8] transform -rotate-1 mx-auto max-w-2xl mt-8 transition-transform hover:rotate-1 hover:scale-105 duration-300">
+				<p class="text-lg">
+					¡Hola! 👋 Bienvenido al sitio web <strong class="text-ph-light">no oficial</strong> más chévere para conocer las propuestas de nuestro próximo presidente. 
+				</p>
+				<p class="mt-4">
+					<marquee scrollamount="5" class="bg-black text-white p-2 rounded border border-gray-700 font-mono text-sm">La paz, la vida, la tierra y la justicia social nos esperan... 🏃🏽‍♀️💨  (Únete a la revolución!)</marquee>
+				</p>
+			</div>
+		</header>
+
+		<!-- Cards Section -->
+		<section class="mt-20">
+			<h3 class="text-3xl text-center mb-8 flex justify-center items-center gap-3">
+				<span class="animate-bounce">👇🏽</span> Explora los Ejes Temáticos <span class="animate-bounce">👇🏽</span>
+			</h3>
+			
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<ThemeCard 
+					title="Paz y Anticorrupción" 
+					emoji="🕊️🔍"
+					colorClass="bg-eje-peace text-black shadow-[6px_6px_0px_#10B981]"
+					borderColor="border-eje-peace"
+					hoverColor="hover:bg-[#10B981]"
+					href="/ejes/paz"
+					description="Un nuevo sistema nacional para erradicar la macrocorrupción y consolidar la paz total."
+				/>
+				
+				<ThemeCard 
+					title="Revolución Agraria" 
+					emoji="💧🌱"
+					colorClass="bg-eje-agri text-black shadow-[6px_6px_0px_#F59E0B]"
+					borderColor="border-eje-agri"
+					hoverColor="hover:bg-[#F59E0B]"
+					href="/ejes/agraria"
+					description="Acceso al agua, comida para todos y soberanía en el territorio colombiano."
+				/>
+				
+				<ThemeCard 
+					title="Seguridad y Prosperidad" 
+					emoji="🤝🏠"
+					colorClass="bg-eje-safety text-black shadow-[6px_6px_0px_#3B82F6]"
+					borderColor="border-eje-safety"
+					hoverColor="hover:bg-[#3B82F6]"
+					href="/ejes/seguridad"
+					description="Orden desde la dignidad: seguridad humana, empleo y prosperidad para todos y todas."
+				/>
+				
+				<ThemeCard 
+					title="Igualdad y Antirracismo" 
+					emoji="✊🏾⚖️"
+					colorClass="bg-eje-equal text-black shadow-[6px_6px_0px_#EC4899]"
+					borderColor="border-eje-equal"
+					hoverColor="hover:bg-[#EC4899]"
+					href="/ejes/igualdad"
+					description="Política social poderosa para superar la pobreza y derrotar el racismo de raíz."
+				/>
+			</div>
+		</section>
+
+		<!-- Mitos vs Realidades Section -->
+		<section class="mt-32">
+			<h3 class="text-3xl sm:text-4xl text-center mb-12 flex justify-center items-center gap-3 font-bold font-['Comic_Sans_MS',cursive]">
+				<span class="animate-pulse">🤡</span> Mitos vs. Realidades <span class="animate-pulse">💯</span>
+			</h3>
+			
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+				<FlipCard 
+					myth="¡Van a estatizar y quebrar la economía nacional!"
+					reality="No equivale a construir una economía improductiva. Demostraremos con cifras que una economía basada en reforma agraria y transición energética produce empleo y crecimiento real."
+					mythEmoji="📉"
+					realityEmoji="🚀"
+				/>
+				
+				<FlipCard 
+					myth="¡Es una revancha impulsada por el rencor!"
+					reality="Aunque tenemos derecho a la justicia como víctimas, estamos dispuestos a buscar la reconciliación. Somos generosos y buscaremos el acuerdo nacional."
+					mythEmoji="😡"
+					realityEmoji="🤝"
+				/>
+
+				<FlipCard 
+					myth="¡Es una revolución violenta enemiga de las instituciones!"
+					reality="Es una revolución pacífica a favor del campesinado. No empuñará armas, sino semillas. No reparte balas, sino tierra, no cultiva odio, sino justicia."
+					mythEmoji="⚔️"
+					realityEmoji="🌱"
+				/>
+
+				<FlipCard 
+					myth="¡Van a acabar con las instituciones y la democracia!"
+					reality="Respetaré las instituciones y su independencia. Defenderé y fomentaré todas las formas de participación democrática, pacífica y organizada."
+					mythEmoji="🏛️"
+					realityEmoji="🗳️"
+				/>
+
+				<FlipCard 
+					myth="¡Gobierno de odio y ataques personales!"
+					reality="No responderé con insultos ni campañas difamatorias. No apelaré al odio ni a la deshumanización del oponente."
+					mythEmoji="💢"
+					realityEmoji="🕊️"
+				/>
+
+				<FlipCard 
+					myth="¡Seguirán los privilegios y lujos del alto gobierno!"
+					reality="Desde el primer día reduciremos salarios altos y eliminaremos lujos. Cada peso ahorrado se destinará al gasto social."
+					mythEmoji="💸"
+					realityEmoji="✅"
+				/>
+			</div>
+		</section>
+
+		<!-- Timeline Section -->
+		<section class="mt-32 bg-gray-900 border-4 border-ph-light p-8 sm:p-12 rounded-3xl shadow-[10px_10px_0px_#A020F0] relative overflow-hidden">
+			<div class="absolute -top-10 -right-10 text-9xl opacity-10">⏱️</div>
+			
+			<h3 class="text-3xl sm:text-4xl text-center mb-12 font-bold flex justify-center items-center gap-3">
+				<span>⚡</span> Plan de Choque <span class="text-xl text-eje-equal font-mono">(100 Días)</span>
+			</h3>
+
+			<div class="space-y-4">
+				<TimelineItem 
+					day="Día 1"
+					title="Diálogo Nacional y Cero Tolerancia"
+					description="Mi primera medida será convocar un diálogo nacional para un acuerdo de reconciliación. Desde el primer día seré implacable frente a la corrupción."
+					emoji="📣"
+				/>
+
+				<TimelineItem 
+					day="Días 1 - 30"
+					title="Caza a la Macrocorrupción"
+					description="Estructuración de la Unidad Nacional Especializada, creación de los tribunales de choque y el Fondo de Reparación para Víctimas del robo estatal."
+					emoji="🦅"
+				/>
+
+				<TimelineItem 
+					day="Días 1 - 10"
+					title="Ley de Austeridad Republicana"
+					description="Presentaremos al Congreso, con mensaje de urgencia, una Ley de Austeridad Republicana y dictaremos medidas ejecutivas para controlar el gasto."
+					emoji="🧾"
+				/>
+
+				<TimelineItem 
+					day="Días 1 - 30"
+					title="Fin de privilegios y lujos"
+					description="Reduciremos en el primer día el salario del presidente y ministros. Se eliminarán gastos suntuarios y cada peso irá al bienestar social."
+					emoji="✂️"
+				/>
+
+				<TimelineItem 
+					day="Día 100"
+					title="Ofensiva Agraria Inmediata"
+					description="Iniciar las vías de adjudicación y saneamiento del primer lote fundamental del millón de hectáreas. Y arranque del plan nacional de agua potable en áreas vulnerables."
+					emoji="🚜"
+				/>
+			</div>
+
+		</section>
+
+		<div class="mt-20 text-center flex flex-col items-center">
+			<div class="text-6xl mb-4 hover:animate-spin cursor-pointer">🌍</div>
+			<p class="text-xl font-bold bg-ph-purple px-4 py-2 rounded-full inline-block transform rotate-2">¡La justicia social viene en camino!</p>
+		</div>
+	</div>
+</Layout>

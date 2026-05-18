@@ -1,0 +1,28 @@
+---
+export interface Props {
+	title: string;
+	emoji: string;
+	colorClass: string;
+	borderColor: string;
+	hoverColor?: string;
+	href: string;
+	description: string;
+}
+
+const { title, emoji, colorClass, borderColor, hoverColor = "", href, description } = Astro.props;
+---
+
+<a href={href} data-tilt class={`group block relative overflow-visible ${colorClass} border-2 ${borderColor} rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-2 hover:-translate-x-2`}>
+	<div class="flex items-center justify-between mb-4">
+		<h4 class="text-2xl font-bold uppercase tracking-wide group-hover:scale-105 transition-transform origin-left">{title}</h4>
+		<span class="text-4xl group-hover:animate-bounce origin-bottom">{emoji}</span>
+	</div>
+	<p class="text-lg font-medium opacity-90 leading-tight">
+		{description}
+	</p>
+	<div class="mt-6 flex justify-end">
+		<span class="inline-flex items-center justify-center bg-black text-white px-4 py-2 rounded-full font-bold text-sm group-hover:pr-6 transition-all">
+			Saber más <span class="ml-2 group-hover:translate-x-2 transition-transform">→</span>
+		</span>
+	</div>
+</a>

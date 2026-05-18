@@ -1,0 +1,63 @@
+---
+---
+<div id="trailing-cursor" class="fixed pointer-events-none z-[9999] opacity-0 transition-opacity duration-300">
+	<span class="text-3xl" id="cursor-emoji">⭐</span>
+</div>
+
+<script is:inline>
+	document.addEventListener('astro:page-load', () => {
+		const cursor = document.getElementById('trailing-cursor');
+		const emoji = document.getElementById('cursor-emoji');
+		
+		if (!cursor || !emoji) return;
+
+		const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+		if (prefersReduced || coarsePointer) return;
+
+		let mouseX = window.innerWidth / 2;
+		let mouseY = window.innerHeight / 2;
+		let cursorX = mouseX;
+		let cursorY = mouseY;
+		
+		// Un array divertido de emojis
+		const emojis = ["⭐", "✨", "🕊️", "💪🏽", "🌱", "🔥"];
+		let emojiIndex = 0;
+
+		window.addEventListener('mousemove', (e) => {
+			mouseX = e.clientX;
+			mouseY = e.clientY;
+			cursor.style.opacity = '1';
+		});
+
+		window.addEventListener('mouseout', () => {
+			cursor.style.opacity = '0';
+		});
+
+		// Interpolación lineal suave
+		function animate() {
+			const dx = mouseX - cursorX;
+			const dy = mouseY - cursorY;
+			
+			cursorX += dx * 0.15;
+			cursorY += dy * 0.15;
+			
+			// Offset para que no tape el cursor real
+			cursor.style.transform = `translate(${cursorX + 15}px, ${cursorY + 15}px)`;
+			
+			requestAnimationFrame(animate);
+		}
+		
+		animate();
+
+		// Cambiar emoji al hacer click!
+		window.addEventListener('click', () => {
+			emojiIndex = (emojiIndex + 1) % emojis.length;
+			emoji.innerText = emojis[emojiIndex];
+			emoji.style.transform = 'scale(1.5)';
+			setTimeout(() => {
+				emoji.style.transform = 'scale(1)';
+			}, 200);
+		});
+	});
+</script>
