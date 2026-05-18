@@ -14,7 +14,7 @@ import Layout from '../../layouts/Layout.astro';
 \\____/ \\___/ \\___/ \\_| |_/\\_____/`}
 		</div>
 
-		<a href="/" class="inline-block mb-8 text-eje-equal hover:underline hover:text-white transition-colors font-sans">
+		<a href={import.meta.env.BASE_URL} class="inline-block mb-8 text-eje-equal hover:underline hover:text-white transition-colors font-sans">
 			← Ir al Menú (a compartir en paz y amor 🏳️‍🌈)
 		</a>
 
@@ -45,25 +45,25 @@ import Layout from '../../layouts/Layout.astro';
 
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
 					
-					<a href="/ejes/igualdad/urbana" class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
+					<a href={import.meta.env.BASE_URL + 'ejes/igualdad/urbana'} class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
 						<div class="text-3xl mb-2 group-hover:animate-bounce">🏙️</div>
 						<h3 class="font-bold text-white text-lg font-['Comic_Sans_MS',cursive]">Revolución Urbana</h3>
 						<p class="text-gray-400 mt-2 font-sans">Mejorar la vida en las ciudades, donde se concentra fuertemente la pobreza.</p>
 					</a>
 
-					<a href="/ejes/igualdad/antirracismo" class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
+					<a href={import.meta.env.BASE_URL + 'ejes/igualdad/antirracismo'} class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
 						<div class="text-3xl mb-2 group-hover:animate-spin">🪘</div>
 						<h3 class="font-bold text-white text-lg font-['Comic_Sans_MS',cursive]">Movimiento Antirracista</h3>
 						<p class="text-gray-400 mt-2 font-sans">Especial foco en nuestras poblaciones afro e indígenas. El daño moral fue propiciado profundamente por el racismo y la exclusión de Tumaco a Buenaventura.</p>
 					</a>
 
-					<a href="/ejes/igualdad/mujeres" class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
+					<a href={import.meta.env.BASE_URL + 'ejes/igualdad/mujeres'} class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
 						<div class="text-3xl mb-2 group-hover:animate-pulse">🙋🏾‍♀️</div>
 						<h3 class="font-bold text-white text-lg font-[Impact]">Las Mujeres en el Centro</h3>
 						<p class="text-gray-400 mt-2 font-sans">Igualdad transformadora con mujeres líderes, desmontando el patriarcado.</p>
 					</a>
 
-					<a href="/ejes/igualdad/juventud" class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
+					<a href={import.meta.env.BASE_URL + 'ejes/igualdad/juventud'} class="block border border-gray-700 p-4 rounded-xl hover:bg-gray-800 hover:scale-105 hover:border-eje-equal transition group cursor-pointer">
 						<div class="text-3xl mb-2 group-hover:animate-bounce">✊🔥</div>
 						<h3 class="font-bold text-white text-lg font-['Comic_Sans_MS',cursive]">Poder de la Juventud</h3>
 						<p class="text-gray-400 mt-2 font-sans">El estallido social demostró que la juventud organizada y en defensa del país es la verdadera fuerza del cambio.</p>
