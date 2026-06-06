@@ -6,365 +6,345 @@
     <title>slice viewer</title>
     <style>
         *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
         }
         html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            width: 100%; height: 100%; overflow: hidden;
             background: #000;
             font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
+            -webkit-user-select: none; user-select: none;
             cursor: grab;
         }
-        body.grabbing {
-            cursor: grabbing;
+        body.grabbing { cursor: grabbing; }
+        canvas {
+            display: block;
+            position: fixed; top: 0; left: 0;
         }
-        #viewport {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+        #loading {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255,255,255,0.5); font-size: 0.9rem;
+            z-index: 50; pointer-events: none;
+            transition: opacity 0.5s;
+            text-align: center;
+        }
+        #loading.hidden { opacity: 0; z-index: -1; }
+        #loading-bar {
+            width: 200px; height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px; margin: 8px auto 0;
             overflow: hidden;
         }
-        #image-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            will-change: transform;
+        #loading-bar-inner {
+            height: 100%; background: rgba(255,255,255,0.5);
+            border-radius: 2px; transition: width 0.2s;
         }
-        #slice-img {
-            height: 100vh;
-            width: auto;
-            display: block;
-            image-rendering: auto;
-            pointer-events: none;
+        #download-link {
+            position: fixed; top: 16px; right: 16px;
+            color: rgba(255,255,255,0.35); text-decoration: none;
+            font-size: 0.8rem; z-index: 100; transition: color 0.3s;
         }
+        #download-link:hover { color: rgba(255,255,255,0.75); }
         #controls {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
+            position: fixed; bottom: 24px; left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            display: flex; align-items: center; gap: 6px;
             background: rgba(20, 20, 20, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 999px;
-            padding: 8px 16px;
-            z-index: 100;
-            opacity: 0.3;
-            transition: opacity 0.4s ease;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 999px; padding: 8px 16px;
+            z-index: 100; opacity: 0.3; transition: opacity 0.4s ease;
         }
-        #controls:hover, #controls.touch-active {
-            opacity: 1;
-        }
+        #controls:hover, #controls.touch-active { opacity: 1; }
         .ctrl-btn {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 1.3rem;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, color 0.2s;
-            flex-shrink: 0;
+            background: none; border: none; color: #ccc;
+            font-size: 1.3rem; width: 38px; height: 38px;
+            border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, color 0.2s; flex-shrink: 0;
         }
-        .ctrl-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
-        }
-        .ctrl-btn:active {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        .ctrl-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+        .ctrl-btn:active { background: rgba(255,255,255,0.2); }
         .ctrl-divider {
-            width: 1px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            margin: 0 4px;
-            flex-shrink: 0;
+            width: 1px; height: 20px;
+            background: rgba(255,255,255,0.15); margin: 0 4px; flex-shrink: 0;
         }
         .speed-label {
-            color: #999;
-            font-size: 0.75rem;
-            min-width: 36px;
-            text-align: center;
-            font-variant-numeric: tabular-nums;
+            color: #999; font-size: 0.75rem; min-width: 36px;
+            text-align: center; font-variant-numeric: tabular-nums;
             letter-spacing: 0.03em;
         }
         #back-link {
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            color: rgba(255, 255, 255, 0.35);
-            text-decoration: none;
-            font-size: 0.8rem;
-            z-index: 100;
-            transition: color 0.3s;
+            position: fixed; top: 16px; left: 16px;
+            color: rgba(255,255,255,0.35); text-decoration: none;
+            font-size: 0.8rem; z-index: 100; transition: color 0.3s;
         }
-        #back-link:hover {
-            color: rgba(255, 255, 255, 0.75);
-        }
+        #back-link:hover { color: rgba(255,255,255,0.75); }
     </style>
 </head>
 <body>
     <a id="back-link" href="../">← isaza.xyz</a>
-
-    <div id="viewport">
-        <div id="image-wrapper">
-            <img id="slice-img" src="slice.png" alt="slice" draggable="false" />
-        </div>
+    <a id="download-link" href="slice.png" download title="Download original image">⬇ download</a>
+    <div id="loading">loading tiles… <span id="load-count">0/36</span>
+        <div id="loading-bar"><div id="loading-bar-inner" style="width:0%"></div></div>
     </div>
 
+    <canvas id="canvas"></canvas>
+
     <div id="controls">
-        <button class="ctrl-btn" id="btn-slower" title="Slower" aria-label="Slower">⏪</button>
-        <button class="ctrl-btn" id="btn-pause" title="Pause / Play" aria-label="Pause / Play">⏸️</button>
-        <button class="ctrl-btn" id="btn-faster" title="Faster" aria-label="Faster">⏩</button>
+        <button class="ctrl-btn" id="btn-slower" title="Slower">⏪</button>
+        <button class="ctrl-btn" id="btn-pause" title="Pause / Play">⏸️</button>
+        <button class="ctrl-btn" id="btn-faster" title="Faster">⏩</button>
         <span class="ctrl-divider"></span>
         <span class="speed-label" id="speed-label">1×</span>
         <span class="ctrl-divider"></span>
-        <button class="ctrl-btn" id="btn-zoom-out" title="Zoom Out" aria-label="Zoom Out">🔍</button>
-        <button class="ctrl-btn" id="btn-zoom-in" title="Zoom In" aria-label="Zoom In">🔎</button>
+        <button class="ctrl-btn" id="btn-zoom-out" title="Zoom Out">🔍</button>
+        <button class="ctrl-btn" id="btn-zoom-in" title="Zoom In">🔎</button>
     </div>
 
     <script>
     (function() {
-        const viewport = document.getElementById('viewport');
-        const wrapper = document.getElementById('image-wrapper');
-        const img = document.getElementById('slice-img');
-        const speedLabel = document.getElementById('speed-label');
+        // ---- Image constants (from the tile split) ----
+        const FULL_W = 144852;
+        const FULL_H = 410;
+        const TILE_W = 4096;
+        const NUM_TILES = 36;
+        const TILE_H = FULL_H; // all tiles same height
 
-        // State
+        // ---- DOM ----
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const speedLabel = document.getElementById('speed-label');
+        const loading = document.getElementById('loading');
+        const loadCount = document.getElementById('load-count');
+        const loadingBarInner = document.getElementById('loading-bar-inner');
+        const btnPause = document.getElementById('btn-pause');
+
+        // ---- State ----
         let scrollX = 0;
         let paused = false;
-        let speedMultiplier = 1;
-        let zoomLevel = 1; // 1 = 100vh height
-        const BASE_SPEED = 0.8; // pixels per frame at 1x
-        const SPEED_STEPS = [0.25, 0.5, 1, 2, 4];
-        const ZOOM_STEPS = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4];
+        let zoomLevel = 0.3; // image height = zoomLevel * viewport height
+        const BASE_SPEED = 1.5;
+        const SPEED_STEPS = [0.125, 0.25, 0.5, 1, 2, 4, 8];
+        const ZOOM_STEPS = [0.03125, 0.0625, 0.125, 0.25, 0.3, 0.5, 0.75, 1, 1.5, 2, 3, 4];
         let currentSpeedIndex = SPEED_STEPS.indexOf(1);
-        let currentZoomIndex = ZOOM_STEPS.indexOf(1);
+        let currentZoomIndex = ZOOM_STEPS.indexOf(0.3);
 
-        // Manual pan state
+        // Manual pan
         let isDragging = false;
         let dragStartX = 0;
         let dragStartScrollX = 0;
 
-        function applyZoom() {
-            const vh = window.innerHeight;
-            img.style.height = (vh * zoomLevel) + 'px';
-            img.style.width = 'auto';
-            // Clamp scroll position after zoom change
-            clampScroll();
+        // Tile cache
+        const tileCache = new Map(); // index -> HTMLImageElement
+        let tilesLoaded = 0;
+
+        // ---- Load all tiles upfront ----
+        function loadTile(i) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const pad = String(i).padStart(4, '0');
+                img.onload = () => {
+                    tileCache.set(i, img);
+                    tilesLoaded++;
+                    loadCount.textContent = tilesLoaded + '/' + NUM_TILES;
+                    loadingBarInner.style.width = (tilesLoaded / NUM_TILES * 100) + '%';
+                    if (tilesLoaded >= NUM_TILES) {
+                        setTimeout(() => loading.classList.add('hidden'), 400);
+                    }
+                    resolve();
+                };
+                img.onerror = () => {
+                    tilesLoaded++;
+                    loadingBarInner.style.width = (tilesLoaded / NUM_TILES * 100) + '%';
+                    console.warn('Failed to load tile', i);
+                    if (tilesLoaded >= NUM_TILES) {
+                        setTimeout(() => loading.classList.add('hidden'), 400);
+                    }
+                    resolve(); // don't block the rest
+                };
+                img.src = 'tiles/tile_' + pad + '.jpg';
+            });
+        }
+
+        function loadAllTiles() {
+            // Load all 36 tiles in parallel (browser limits concurrency)
+            const promises = [];
+            for (let i = 0; i < NUM_TILES; i++) {
+                promises.push(loadTile(i));
+            }
+            return Promise.all(promises);
+        }
+
+        // ---- Drawing ----
+        function render() {
+            const vw = canvas.width = window.innerWidth;
+            const vh = canvas.height = window.innerHeight;
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, vw, vh);
+
+            if (!tileCache.size) return;
+
+            // Image dimensions in pixels on screen
+            const imgH = vh * zoomLevel;
+            const imgW = imgH * (FULL_W / FULL_H);
+
+            // Visible range in image pixels
+            const visLeft = scrollX;
+            const visRight = scrollX + vw;
+
+            // Map from image pixels to screen: screenX = (imgPixelX - scrollX)
+            const scale = imgH / FULL_H; // screen pixels per image pixel
+
+            // Which tiles intersect the visible range?
+            const firstTile = Math.max(0, Math.floor(visLeft / TILE_W));
+            const lastTile = Math.min(NUM_TILES - 1, Math.floor(visRight / TILE_W));
+
+            for (let i = firstTile; i <= lastTile; i++) {
+                const img = tileCache.get(i);
+                if (!img) continue;
+
+                const tileLeft = i * TILE_W;
+                const tileWidth = (i === NUM_TILES - 1) ? (FULL_W - tileLeft) : TILE_W;
+
+                // Source rect (always full tile height)
+                const sx = 0;
+                const sy = 0;
+                const sw = tileWidth;
+                const sh = TILE_H;
+
+                // Destination on canvas
+                const dx = (tileLeft - scrollX) * scale;
+                const dy = (vh - imgH) / 2;
+                const dw = tileWidth * scale;
+                const dh = imgH;
+
+                // Only draw if visible (in case of partial overlap)
+                if (dx + dw > 0 && dx < vw) {
+                    ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+                }
+            }
         }
 
         function clampScroll() {
-            const maxScroll = Math.max(0, img.offsetWidth - window.innerWidth);
+            const vw = window.innerWidth;
+            const imgW = window.innerHeight * zoomLevel * (FULL_W / FULL_H);
+            const maxScroll = Math.max(0, imgW - vw);
             if (scrollX > maxScroll) scrollX = maxScroll;
             if (scrollX < 0) scrollX = 0;
-            wrapper.style.transform = 'translateX(' + (-scrollX) + 'px)';
         }
 
         function updateSpeedLabel() {
-            const s = SPEED_STEPS[currentSpeedIndex];
-            speedLabel.textContent = s + '×';
+            speedLabel.textContent = SPEED_STEPS[currentSpeedIndex] + '×';
         }
 
-        // Auto-scroll loop
+        // ---- Loop ----
         function tick() {
-            if (!paused) {
-                const speed = BASE_SPEED * SPEED_STEPS[currentSpeedIndex];
-                scrollX += speed;
+            if (!paused && !isDragging) {
+                scrollX += BASE_SPEED * SPEED_STEPS[currentSpeedIndex];
                 clampScroll();
             }
+            render();
             requestAnimationFrame(tick);
         }
 
-        // Button handlers
-        document.getElementById('btn-pause').addEventListener('click', function() {
+        // ---- Controls ----
+        btnPause.addEventListener('click', function() {
             paused = !paused;
             this.textContent = paused ? '▶️' : '⏸️';
         });
 
         document.getElementById('btn-faster').addEventListener('click', function() {
-            if (currentSpeedIndex < SPEED_STEPS.length - 1) {
-                currentSpeedIndex++;
-                updateSpeedLabel();
-            }
+            if (currentSpeedIndex < SPEED_STEPS.length - 1) { currentSpeedIndex++; updateSpeedLabel(); }
         });
-
         document.getElementById('btn-slower').addEventListener('click', function() {
-            if (currentSpeedIndex > 0) {
-                currentSpeedIndex--;
-                updateSpeedLabel();
-            }
+            if (currentSpeedIndex > 0) { currentSpeedIndex--; updateSpeedLabel(); }
         });
-
         document.getElementById('btn-zoom-in').addEventListener('click', function() {
-            if (currentZoomIndex < ZOOM_STEPS.length - 1) {
-                currentZoomIndex++;
-                zoomLevel = ZOOM_STEPS[currentZoomIndex];
-                applyZoom();
-            }
+            if (currentZoomIndex < ZOOM_STEPS.length - 1) { currentZoomIndex++; zoomLevel = ZOOM_STEPS[currentZoomIndex]; clampScroll(); }
         });
-
         document.getElementById('btn-zoom-out').addEventListener('click', function() {
-            if (currentZoomIndex > 0) {
-                currentZoomIndex--;
-                zoomLevel = ZOOM_STEPS[currentZoomIndex];
-                applyZoom();
-            }
+            if (currentZoomIndex > 0) { currentZoomIndex--; zoomLevel = ZOOM_STEPS[currentZoomIndex]; clampScroll(); }
         });
 
         // Mouse wheel zoom
-        viewport.addEventListener('wheel', function(e) {
+        canvas.addEventListener('wheel', function(e) {
+            if (e.ctrlKey || e.metaKey) return;
             e.preventDefault();
-            if (e.ctrlKey || e.metaKey) {
-                // Browser zoom — allow it
-                return;
-            }
             if (e.deltaY < 0) {
-                // scroll up = zoom in
-                if (currentZoomIndex < ZOOM_STEPS.length - 1) {
-                    currentZoomIndex++;
-                    zoomLevel = ZOOM_STEPS[currentZoomIndex];
-                    applyZoom();
-                }
+                if (currentZoomIndex < ZOOM_STEPS.length - 1) { currentZoomIndex++; zoomLevel = ZOOM_STEPS[currentZoomIndex]; }
             } else {
-                // scroll down = zoom out
-                if (currentZoomIndex > 0) {
-                    currentZoomIndex--;
-                    zoomLevel = ZOOM_STEPS[currentZoomIndex];
-                    applyZoom();
-                }
+                if (currentZoomIndex > 0) { currentZoomIndex--; zoomLevel = ZOOM_STEPS[currentZoomIndex]; }
             }
+            clampScroll();
         }, { passive: false });
 
-        // Manual pan — mouse
-        viewport.addEventListener('mousedown', function(e) {
+        // Manual pan — mouse (1:1, screen pixel = image pixel at current zoom)
+        canvas.addEventListener('mousedown', function(e) {
             isDragging = true;
             dragStartX = e.clientX;
             dragStartScrollX = scrollX;
             document.body.classList.add('grabbing');
         });
-
         window.addEventListener('mousemove', function(e) {
             if (!isDragging) return;
-            const dx = dragStartX - e.clientX;
+            const imgH = window.innerHeight * zoomLevel;
+            const scale = imgH / FULL_H; // screen pixels per image pixel
+            // Mouse delta in screen px ÷ scale = image px delta
+            const dx = (dragStartX - e.clientX) / scale;
             scrollX = dragStartScrollX + dx;
             clampScroll();
         });
-
         window.addEventListener('mouseup', function() {
             isDragging = false;
             document.body.classList.remove('grabbing');
         });
 
-        // Manual pan — touch
-        viewport.addEventListener('touchstart', function(e) {
+        // touch (1:1, screen pixel = image pixel at current zoom)
+        canvas.addEventListener('touchstart', function(e) {
             if (e.touches.length === 1) {
                 isDragging = true;
                 dragStartX = e.touches[0].clientX;
                 dragStartScrollX = scrollX;
             }
-            // Show controls on touch
             document.getElementById('controls').classList.add('touch-active');
         }, { passive: false });
-
-        viewport.addEventListener('touchmove', function(e) {
+        canvas.addEventListener('touchmove', function(e) {
             if (!isDragging || e.touches.length !== 1) return;
             e.preventDefault();
-            const dx = dragStartX - e.touches[0].clientX;
+            const imgH = window.innerHeight * zoomLevel;
+            const scale = imgH / FULL_H; // screen pixels per image pixel
+            const dx = (dragStartX - e.touches[0].clientX) / scale;
             scrollX = dragStartScrollX + dx;
             clampScroll();
         }, { passive: false });
-
-        viewport.addEventListener('touchend', function() {
+        canvas.addEventListener('touchend', function() {
             isDragging = false;
-            // Hide controls after a delay
             setTimeout(function() {
                 document.getElementById('controls').classList.remove('touch-active');
             }, 2000);
         });
 
-        // Keyboard shortcuts
+        // Keyboard
         window.addEventListener('keydown', function(e) {
             switch (e.key) {
-                case ' ':
-                    e.preventDefault();
-                    paused = !paused;
-                    document.getElementById('btn-pause').textContent = paused ? '▶️' : '⏸️';
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    if (currentSpeedIndex < SPEED_STEPS.length - 1) {
-                        currentSpeedIndex++;
-                        updateSpeedLabel();
-                    }
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    if (currentSpeedIndex > 0) {
-                        currentSpeedIndex--;
-                        updateSpeedLabel();
-                    }
-                    break;
-                case '+':
-                case '=':
-                    e.preventDefault();
-                    if (currentZoomIndex < ZOOM_STEPS.length - 1) {
-                        currentZoomIndex++;
-                        zoomLevel = ZOOM_STEPS[currentZoomIndex];
-                        applyZoom();
-                    }
-                    break;
-                case '-':
-                    e.preventDefault();
-                    if (currentZoomIndex > 0) {
-                        currentZoomIndex--;
-                        zoomLevel = ZOOM_STEPS[currentZoomIndex];
-                        applyZoom();
-                    }
-                    break;
-                case '0':
-                    e.preventDefault();
-                    currentZoomIndex = ZOOM_STEPS.indexOf(1);
-                    zoomLevel = 1;
-                    applyZoom();
-                    currentSpeedIndex = SPEED_STEPS.indexOf(1);
-                    speedMultiplier = 1;
-                    updateSpeedLabel();
-                    break;
+                case ' ': e.preventDefault(); paused = !paused; btnPause.textContent = paused ? '▶️' : '⏸️'; break;
+                case 'ArrowRight': e.preventDefault(); if (currentSpeedIndex < SPEED_STEPS.length - 1) { currentSpeedIndex++; updateSpeedLabel(); } break;
+                case 'ArrowLeft': e.preventDefault(); if (currentSpeedIndex > 0) { currentSpeedIndex--; updateSpeedLabel(); } break;
+                case '+': case '=': e.preventDefault(); if (currentZoomIndex < ZOOM_STEPS.length - 1) { currentZoomIndex++; zoomLevel = ZOOM_STEPS[currentZoomIndex]; clampScroll(); } break;
+                case '-': e.preventDefault(); if (currentZoomIndex > 0) { currentZoomIndex--; zoomLevel = ZOOM_STEPS[currentZoomIndex]; clampScroll(); } break;
+                case '0': e.preventDefault(); currentZoomIndex = ZOOM_STEPS.indexOf(0.3); zoomLevel = 0.3; currentSpeedIndex = SPEED_STEPS.indexOf(1); updateSpeedLabel(); clampScroll(); break;
             }
         });
 
-        // Handle resize
-        window.addEventListener('resize', function() {
-            applyZoom();
-            clampScroll();
-        });
+        window.addEventListener('resize', function() { clampScroll(); render(); });
 
-        // Handle image load — start at the beginning
-        img.addEventListener('load', function() {
-            clampScroll();
-        });
-
-        // Initialize
-        applyZoom();
+        // ---- Init ----
         updateSpeedLabel();
-        requestAnimationFrame(tick);
+        clampScroll();
+        loadAllTiles().then(() => {
+            requestAnimationFrame(tick);
+        });
     })();
     </script>
 </body>
