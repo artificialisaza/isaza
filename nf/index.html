@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>slice viewer</title>
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: grab;
+        }
+        body.grabbing {
+            cursor: grabbing;
+        }
+        #viewport {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #image-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            will-change: transform;
+        }
+        #slice-img {
+            height: 100vh;
+            width: auto;
+            display: block;
+            image-rendering: auto;
+            pointer-events: none;
+        }
+        #controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 999px;
+            padding: 8px 16px;
+            z-index: 100;
+            opacity: 0.3;
+            transition: opacity 0.4s ease;
+        }
+        #controls:hover, #controls.touch-active {
+            opacity: 1;
+        }
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 1.3rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+            flex-shrink: 0;
+        }
+        .ctrl-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+        .ctrl-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .ctrl-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 4px;
+            flex-shrink: 0;
+        }
+        .speed-label {
+            color: #999;
+            font-size: 0.75rem;
+            min-width: 36px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.03em;
+        }
+        #back-link {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            color: rgba(255, 255, 255, 0.35);
+            text-decoration: none;
+            font-size: 0.8rem;
+            z-index: 100;
+            transition: color 0.3s;
+        }
+        #back-link:hover {
+            color: rgba(255, 255, 255, 0.75);
+        }
+    </style>
+</head>
+<body>
+    <a id="back-link" href="../">← isaza.xyz</a>
+
+    <div id="viewport">
+        <div id="image-wrapper">
+            <img id="slice-img" src="slice.png" alt="slice" draggable="false" />
+        </div>
+    </div>
+
+    <div id="controls">
+        <button class="ctrl-btn" id="btn-slower" title="Slower" aria-label="Slower">⏪</button>
+        <button class="ctrl-btn" id="btn-pause" title="Pause / Play" aria-label="Pause / Play">⏸️</button>
+        <button class="ctrl-btn" id="btn-faster" title="Faster" aria-label="Faster">⏩</button>
+        <span class="ctrl-divider"></span>
+        <span class="speed-label" id="speed-label">1×</span>
+        <span class="ctrl-divider"></span>
+        <button class="ctrl-btn" id="btn-zoom-out" title="Zoom Out" aria-label="Zoom Out">🔍</button>
+        <button class="ctrl-btn" id="btn-zoom-in" title="Zoom In" aria-label="Zoom In">🔎</button>
+    </div>
+
+    <script>
+    (function() {
+        const viewport = document.getElementById('viewport');
+        const wrapper = document.getElementById('image-wrapper');
+        const img = document.getElementById('slice-img');
+        const speedLabel = document.getElementById('speed-label');
+
+        // State
+        let scrollX = 0;
+        let paused = false;
+        let speedMultiplier = 1;
+        let zoomLevel = 1; // 1 = 100vh height
+        const BASE_SPEED = 0.8; // pixels per frame at 1x
+        const SPEED_STEPS = [0.25, 0.5, 1, 2, 4];
+        const ZOOM_STEPS = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4];
+        let currentSpeedIndex = SPEED_STEPS.indexOf(1);
+        let currentZoomIndex = ZOOM_STEPS.indexOf(1);
+
+        // Manual pan state
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartScrollX = 0;
+
+        function applyZoom() {
+            const vh = window.innerHeight;
+            img.style.height = (vh * zoomLevel) + 'px';
+            img.style.width = 'auto';
+            // Clamp scroll position after zoom change
+            clampScroll();
+        }
+
+        function clampScroll() {
+            const maxScroll = Math.max(0, img.offsetWidth - window.innerWidth);
+            if (scrollX > maxScroll) scrollX = maxScroll;
+            if (scrollX < 0) scrollX = 0;
+            wrapper.style.transform = 'translateX(' + (-scrollX) + 'px)';
+        }
+
+        function updateSpeedLabel() {
+            const s = SPEED_STEPS[currentSpeedIndex];
+            speedLabel.textContent = s + '×';
+        }
+
+        // Auto-scroll loop
+        function tick() {
+            if (!paused) {
+                const speed = BASE_SPEED * SPEED_STEPS[currentSpeedIndex];
+                scrollX += speed;
+                clampScroll();
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // Button handlers
+        document.getElementById('btn-pause').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? '▶️' : '⏸️';
+        });
+
+        document.getElementById('btn-faster').addEventListener('click', function() {
+            if (currentSpeedIndex < SPEED_STEPS.length - 1) {
+                currentSpeedIndex++;
+                updateSpeedLabel();
+            }
+        });
+
+        document.getElementById('btn-slower').addEventListener('click', function() {
+            if (currentSpeedIndex > 0) {
+                currentSpeedIndex--;
+                updateSpeedLabel();
+            }
+        });
+
+        document.getElementById('btn-zoom-in').addEventListener('click', function() {
+            if (currentZoomIndex < ZOOM_STEPS.length - 1) {
+                currentZoomIndex++;
+                zoomLevel = ZOOM_STEPS[currentZoomIndex];
+                applyZoom();
+            }
+        });
+
+        document.getElementById('btn-zoom-out').addEventListener('click', function() {
+            if (currentZoomIndex > 0) {
+                currentZoomIndex--;
+                zoomLevel = ZOOM_STEPS[currentZoomIndex];
+                applyZoom();
+            }
+        });
+
+        // Mouse wheel zoom
+        viewport.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            if (e.ctrlKey || e.metaKey) {
+                // Browser zoom — allow it
+                return;
+            }
+            if (e.deltaY < 0) {
+                // scroll up = zoom in
+                if (currentZoomIndex < ZOOM_STEPS.length - 1) {
+                    currentZoomIndex++;
+                    zoomLevel = ZOOM_STEPS[currentZoomIndex];
+                    applyZoom();
+                }
+            } else {
+                // scroll down = zoom out
+                if (currentZoomIndex > 0) {
+                    currentZoomIndex--;
+                    zoomLevel = ZOOM_STEPS[currentZoomIndex];
+                    applyZoom();
+                }
+            }
+        }, { passive: false });
+
+        // Manual pan — mouse
+        viewport.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            dragStartX = e.clientX;
+            dragStartScrollX = scrollX;
+            document.body.classList.add('grabbing');
+        });
+
+        window.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            const dx = dragStartX - e.clientX;
+            scrollX = dragStartScrollX + dx;
+            clampScroll();
+        });
+
+        window.addEventListener('mouseup', function() {
+            isDragging = false;
+            document.body.classList.remove('grabbing');
+        });
+
+        // Manual pan — touch
+        viewport.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                isDragging = true;
+                dragStartX = e.touches[0].clientX;
+                dragStartScrollX = scrollX;
+            }
+            // Show controls on touch
+            document.getElementById('controls').classList.add('touch-active');
+        }, { passive: false });
+
+        viewport.addEventListener('touchmove', function(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            e.preventDefault();
+            const dx = dragStartX - e.touches[0].clientX;
+            scrollX = dragStartScrollX + dx;
+            clampScroll();
+        }, { passive: false });
+
+        viewport.addEventListener('touchend', function() {
+            isDragging = false;
+            // Hide controls after a delay
+            setTimeout(function() {
+                document.getElementById('controls').classList.remove('touch-active');
+            }, 2000);
+        });
+
+        // Keyboard shortcuts
+        window.addEventListener('keydown', function(e) {
+            switch (e.key) {
+                case ' ':
+                    e.preventDefault();
+                    paused = !paused;
+                    document.getElementById('btn-pause').textContent = paused ? '▶️' : '⏸️';
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    if (currentSpeedIndex < SPEED_STEPS.length - 1) {
+                        currentSpeedIndex++;
+                        updateSpeedLabel();
+                    }
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    if (currentSpeedIndex > 0) {
+                        currentSpeedIndex--;
+                        updateSpeedLabel();
+                    }
+                    break;
+                case '+':
+                case '=':
+                    e.preventDefault();
+                    if (currentZoomIndex < ZOOM_STEPS.length - 1) {
+                        currentZoomIndex++;
+                        zoomLevel = ZOOM_STEPS[currentZoomIndex];
+                        applyZoom();
+                    }
+                    break;
+                case '-':
+                    e.preventDefault();
+                    if (currentZoomIndex > 0) {
+                        currentZoomIndex--;
+                        zoomLevel = ZOOM_STEPS[currentZoomIndex];
+                        applyZoom();
+                    }
+                    break;
+                case '0':
+                    e.preventDefault();
+                    currentZoomIndex = ZOOM_STEPS.indexOf(1);
+                    zoomLevel = 1;
+                    applyZoom();
+                    currentSpeedIndex = SPEED_STEPS.indexOf(1);
+                    speedMultiplier = 1;
+                    updateSpeedLabel();
+                    break;
+            }
+        });
+
+        // Handle resize
+        window.addEventListener('resize', function() {
+            applyZoom();
+            clampScroll();
+        });
+
+        // Handle image load — start at the beginning
+        img.addEventListener('load', function() {
+            clampScroll();
+        });
+
+        // Initialize
+        applyZoom();
+        updateSpeedLabel();
+        requestAnimationFrame(tick);
+    })();
+    </script>
+</body>
+</html>
