@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/" />
+    <title>redirecting…</title>
+    <script>
+    (function() {
+        var path = window.location.pathname;
+        // Only redirect the specific typo "/nf/]:" (with optional trailing slash)
+        // Browsers may keep "]:" literal or percent-encode them
+        if (path === '/nf/]:' || path === '/nf/]:/' ||
+            path === '/nf/%5D:' || path === '/nf/%5D:/' ||
+            path === '/nf/]%3A' || path === '/nf/]%3A/' ||
+            path === '/nf/%5D%3A' || path === '/nf/%5D%3A/') {
+            window.location.replace('/nf/');
+        } else {
+            // Everything else goes home
+            window.location.replace('/');
+        }
+    })();
+    </script>
+</head>
+<body style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;">
+    <p>redirecting…</p>
+</body>
+</html>

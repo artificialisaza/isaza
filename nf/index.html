@@ -180,6 +180,7 @@
             const vw = canvas.width = window.innerWidth;
             const vh = canvas.height = window.innerHeight;
 
+            ctx.imageSmoothingEnabled = false;
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, vw, vh);
 
