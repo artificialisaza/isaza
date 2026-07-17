@@ -11,7 +11,7 @@ const projects = [
       en: "2025 · inkjet print",
       es: "2025 · impresión"
     },
-    image: "assets/images/Quadro_lowres_11nov.jpg",
+    image: "assets/images/webp/Quadro_lowres_11nov.webp",
     link: "projects/reyno.html",
     tags: ["exhibition"]
   },
@@ -20,7 +20,7 @@ const projects = [
     year: 2024,
     title: { en: "Being Water", es: "Being Water" },
     meta: { en: "2024 · interactive experience", es: "2024 · experiencia interactiva" },
-    image: "assets/images/Being_Water_Still_2_compressed.jpg",
+    image: "assets/images/webp/Being_Water_Still_2_compressed.webp",
     link: "projects/being_water.html",
     tags: ["exhibition", "interaction"]
   },
@@ -29,7 +29,7 @@ const projects = [
     year: 2022,
     title: { en: "the last film on earth", es: "La última película" },
     meta: { en: "2022 · transmedia project", es: "2022 · proyecto transmedia" },
-    image: "assets/images/LAST_FRAME_01.png",
+    image: "assets/images/webp/LAST_FRAME_01.webp",
     link: "projects/last_run.html",
     tags: ["exhibition", "film"]
   },
@@ -38,7 +38,7 @@ const projects = [
     year: 2022,
     title: { en: "sereno (serene wind)", es: "Sereno" },
     meta: { en: "2022 · fiction short film", es: "2022 · cortometraje de ficción" },
-    image: "assets/images/SE_STILL_1.jpg",
+    image: "assets/images/webp/SE_STILL_1.webp",
     link: "projects/lorem-film.html",
     tags: ["film"]
   },
@@ -56,7 +56,7 @@ const projects = [
     year: 2021,
     title: { en: "Animal blanco - Tiranosaurio rex", es: "Animal blanco - Tiranosaurio rex" },
     meta: { en: "2021 · music video", es: "2021 · videoclip" },
-    image: "assets/images/TR_2.jpg",
+    image: "assets/images/webp/TR_2.webp",
     link: "projects/tiranosaurio.html",
     tags: ["video"]
   },
@@ -65,7 +65,7 @@ const projects = [
     year: 2020,
     title: { en: "homo videns", es: "homo videns" },
     meta: { en: "2020 · video-essay", es: "2020 · video-ensayo" },
-    image: "assets/images/HV1_compressed.jpg",
+    image: "assets/images/webp/HV1_compressed.webp",
     link: "projects/homo_videns.html",
     tags: ["video"]
 
@@ -75,7 +75,7 @@ const projects = [
     year: 2020,
     title: { en: "Nicolás y los Fumadores - La pálida", es: "Nicolás y los Fumadores - La pálida" },
     meta: { en: "2020 · music video", es: "2020 · videoclip" },
-    image: "assets/images/LP_0.jpg",
+    image: "assets/images/webp/LP_0.webp",
     link: "projects/palida.html",
     tags: ["video"]
   },
@@ -85,7 +85,7 @@ const projects = [
     year: 2018,
     title: { en: "Los Bliss - Sangra", es: "Los Bliss - Sangra" },
     meta: { en: "2018 · music video", es: "2018 · videoclip" },
-    image: "assets/images/sangra.jpg",
+    image: "assets/images/webp/sangra.webp",
     link: "projects/sangra.html",
     tags: ["video"]
   },
@@ -94,7 +94,7 @@ const projects = [
     year: 2018,
     title: { en: "Nicolás y los Fumadores - Bailando triste", es: "Nicolás y los Fumadores - Bailando triste" },
     meta: { en: "2018 · music video", es: "2018 · videoclip" },
-    image: "assets/images/BT2.jpg",
+    image: "assets/images/webp/BT2.webp",
     link: "projects/bailar_triste.html",
     tags: ["video"]
   },
@@ -103,7 +103,7 @@ const projects = [
     year: 2017,
     title: { en: "medias blancas", es: "medias blancas" },
     meta: { en: "2017 · fiction short film", es: "2017 · cortometraje de ficción" },
-    image: "assets/images/MB Still 2.jpg",
+    image: "assets/images/webp/MB Still 2.webp",
     link: "projects/medias_blancas.html",
     tags: ["film"]
   }

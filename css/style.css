@@ -20,7 +20,7 @@ img {
 }
 
 body {
-    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
     background-color: #1a1a1a; /* Dark grey background */
     color: #ffffff;
     line-height: 1.6;
