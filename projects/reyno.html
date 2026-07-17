@@ -314,8 +314,10 @@
         </div>
     </div>
 
-    <div id="main-image-overlay" style="display:none;position:fixed;z-index:10000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.94);align-items:flex-start;justify-content:flex-start;overflow:auto;box-sizing:border-box;cursor:zoom-out;">
-        <img id="main-image-overlay-img" src="" alt="Expanded artwork full size" style="width:auto;max-width:none;max-height:none;box-shadow:0 2px 24px rgba(0,0,0,0.5);display:block;" />
+    <div id="main-image-overlay" style="display:none;position:fixed;z-index:10000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.94);align-items:flex-start;justify-content:flex-start;overflow:auto;box-sizing:border-box;cursor:grab;">
+        <div id="main-image-overlay-zoomer" style="display:inline-block;transform-origin:0 0;">
+            <img id="main-image-overlay-img" src="" alt="Expanded artwork full size" style="width:auto;max-width:none;max-height:none;box-shadow:0 2px 24px rgba(0,0,0,0.5);display:block;" />
+        </div>
     </div>
 
     <div id="lightbox-overlay" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;">
@@ -327,22 +329,35 @@
         const mainImage = mainImageLink.querySelector('img');
         const mainOverlay = document.getElementById('main-image-overlay');
         const mainOverlayImage = document.getElementById('main-image-overlay-img');
+        const mainZoomer = document.getElementById('main-image-overlay-zoomer');
+        let currentScale = 1;
+        const MIN_SCALE = 0.3;
+        const MAX_SCALE = 4;
+        const ZOOM_STEP = 0.15;
+
+        function applyScale(scale) {
+            currentScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+            mainZoomer.style.transform = 'scale(' + currentScale + ')';
+            mainOverlay.style.cursor = currentScale > 1 ? 'grab' : 'zoom-in';
+        }
 
         function positionFromClick(clickRatioX, clickRatioY) {
             const fullWidth = mainOverlayImage.naturalWidth || mainOverlayImage.width;
             const fullHeight = mainOverlayImage.naturalHeight || mainOverlayImage.height;
             if (!fullWidth || !fullHeight) return;
 
-            const targetX = fullWidth * clickRatioX;
-            const targetY = fullHeight * clickRatioY;
+            const scaledW = fullWidth * currentScale;
+            const scaledH = fullHeight * currentScale;
+            const targetX = scaledW * clickRatioX;
+            const targetY = scaledH * clickRatioY;
             const viewportWidth = mainOverlay.clientWidth;
             const viewportHeight = mainOverlay.clientHeight;
 
             let nextScrollLeft = targetX - (viewportWidth / 2);
             let nextScrollTop = targetY - (viewportHeight / 2);
 
-            const maxScrollLeft = Math.max(0, fullWidth - viewportWidth);
-            const maxScrollTop = Math.max(0, fullHeight - viewportHeight);
+            const maxScrollLeft = Math.max(0, scaledW - viewportWidth);
+            const maxScrollTop = Math.max(0, scaledH - viewportHeight);
 
             nextScrollLeft = Math.max(0, Math.min(nextScrollLeft, maxScrollLeft));
             nextScrollTop = Math.max(0, Math.min(nextScrollTop, maxScrollTop));
@@ -350,6 +365,67 @@
             mainOverlay.scrollLeft = nextScrollLeft;
             mainOverlay.scrollTop = nextScrollTop;
         }
+
+        function resetZoom() {
+            applyScale(1);
+            mainOverlay.scrollLeft = 0;
+            mainOverlay.scrollTop = 0;
+        }
+
+        // Double-click to reset zoom
+        mainOverlay.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            resetZoom();
+        });
+
+        // Trackpad pinch-zoom (macOS sends ctrlKey + wheel for pinch gestures)
+        mainOverlay.addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                const rect = mainOverlay.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left + mainOverlay.scrollLeft;
+                const mouseY = e.clientY - rect.top + mainOverlay.scrollTop;
+                const oldScale = currentScale;
+                const delta = -e.deltaY * 0.01;
+                const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, currentScale + delta));
+                applyScale(newScale);
+                const scaleChange = currentScale / oldScale;
+                mainOverlay.scrollLeft = mouseX * scaleChange - (e.clientX - rect.left);
+                mainOverlay.scrollTop = mouseY * scaleChange - (e.clientY - rect.top);
+            }
+            // Regular scroll without ctrl just pans via native overflow:auto (no preventDefault needed)
+        }, { passive: false });
+
+        // Pinch-zoom for touch devices
+        let lastDist = 0;
+        let lastScale = 1;
+        mainOverlay.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                lastDist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                lastScale = currentScale;
+            }
+        }, { passive: true });
+
+        mainOverlay.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const dist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                if (lastDist > 0) {
+                    const newScale = lastScale * (dist / lastDist);
+                    applyScale(newScale);
+                }
+            }
+        }, { passive: false });
+
+        mainOverlay.addEventListener('touchend', function() {
+            lastDist = 0;
+        });
 
         mainImageLink.addEventListener('click', function(e) {
             e.preventDefault();
@@ -360,6 +436,7 @@
             const clampedRatioX = Math.max(0, Math.min(1, clickRatioX));
             const clampedRatioY = Math.max(0, Math.min(1, clickRatioY));
 
+            resetZoom();
             mainOverlayImage.src = this.getAttribute('data-full-img');
             mainOverlay.style.display = 'flex';
 
@@ -373,9 +450,20 @@
             }
         });
 
-        mainOverlay.addEventListener('click', function() {
-            this.style.display = 'none';
-            mainOverlayImage.src = '';
+        // Close overlay on click (background or image, but not on double-click)
+        let clickTimer = null;
+        mainOverlay.addEventListener('click', function(e) {
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+                clickTimer = null;
+                return; // This is the second click of a double-click, don't close
+            }
+            clickTimer = setTimeout(function() {
+                clickTimer = null;
+                mainOverlay.style.display = 'none';
+                mainOverlayImage.src = '';
+                resetZoom();
+            }, 250);
         });
 
         function updateLanguageUI(lang) {
@@ -440,6 +528,7 @@
             if (e.key === 'Escape') {
                 document.getElementById('main-image-overlay').style.display = 'none';
                 document.getElementById('main-image-overlay-img').src = '';
+                resetZoom();
                 document.getElementById('lightbox-overlay').style.display = 'none';
                 document.getElementById('lightbox-img').src = '';
             }
