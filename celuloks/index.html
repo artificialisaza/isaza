@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>celuloks — memory game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- PeerJS (WebRTC) via CDN — no backend needed, uses the free public PeerJS broker -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="topbar">
+            <h1 class="game-title">celuloks</h1>
+            <div class="timer" id="timer">0:00</div>
+            <div class="hud" id="scores"></div>
+            <div class="topbar-actions">
+                <button id="restartBtn" title="Reshuffle and reset the game">restart</button>
+                <button id="exitBtn" title="End the session">exit</button>
+            </div>
+        </header>
+
+        <div id="banner" class="banner">&nbsp;</div>
+
+        <div id="boardWrap">
+            <main id="grid" class="grid" aria-label="memory game board"></main>
+        </div>
+    </div>
+
+    <!-- Setup / lobby overlay -->
+    <div id="overlay" class="overlay">
+        <div class="panel">
+            <h2>celuloks</h2>
+            <p class="panel-sub">a memory game for 2 to 6 players</p>
+
+            <div id="setupHome">
+                <button class="big-btn" id="createBtn">create session</button>
+                <div class="divider">or</div>
+                <div class="join-row">
+                    <input id="joinCode" maxlength="5" placeholder="CODE" autocomplete="off" spellcheck="false">
+                    <button class="big-btn" id="joinBtn">join</button>
+                </div>
+                <div class="divider">or</div>
+                <div class="practice-row">
+                    <label for="practiceCount">players</label>
+                    <select id="practiceCount">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                    <button class="big-btn ghost" id="practiceBtn">practice here</button>
+                </div>
+            </div>
+
+            <div id="setupWaiting" hidden>
+                <p class="panel-label">share this code with your friends:</p>
+                <div class="code-display" id="roomCode" title="click to copy">·····</div>
+                <p class="panel-note" id="playerCount">waiting for players to join…</p>
+                <button class="big-btn ghost" id="closeLobbyBtn">go to the board</button>
+                <p class="panel-note small">the game starts when you flip the first card —
+                    friends can still join until then</p>
+            </div>
+
+            <div id="setupError" class="panel-error" hidden></div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
