@@ -11,7 +11,7 @@
     const TOTAL_PAIRS = 36;              // 36 images -> 72 cards
     const COLS = 9, ROWS = 8;            // 9 x 8 grid
     const MAX_PLAYERS = 6;
-    const REVEAL_MS = 1500;              // how long mismatched cards stay up
+    const TIMED_REVEAL_MS = 3000;        // flip-back delay in 'timed' mode
     const MATCH_MS = 700;                // pause before matched cards settle
     const ROOM_PREFIX = 'celuloks-mg-';  // namespace on the public PeerJS broker
     const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
@@ -44,6 +44,7 @@
     let restartToken = 0;     // cancels pending timers after a restart
     let ticker = null;        // 100 ms cronometer display updater
     let sync = { elapsed: 0, at: 0 }; // guest: last cronometer sync from host
+    let revealMode = 'click'; // 'click': missed pair stays up until the next click; 'timed': flips back after 3s
 
     // ---------- helpers ----------
     function randomCode(len) {
@@ -72,6 +73,8 @@
             scores: new Array(playerCount).fill(0),
             playerCount: playerCount,
             status: 'ready',                // ready | playing | ended
+            pending: null,                  // indices of a missed pair kept face-up ('click' mode)
+            revealMode: revealMode,         // host's flip-back setting, broadcast to guests
             startedAt: null,                // host epoch ms of the first flip
             elapsed: 0,                     // ms at the time of the last broadcast
             finalTime: null,                // ms, set when the last pair is made
@@ -263,6 +266,12 @@
         if (state.cards[i].s !== 'down') return;
         if (state.current !== player) return;                // not this player's turn
 
+        // 'click' mode: the previous player's missed pair flips back now
+        if (state.pending) {
+            state.pending.forEach(function (k) { state.cards[k].s = 'down'; });
+            state.pending = null;
+        }
+
         // the very first flip starts the game and the cronometer
         if (state.status === 'ready') {
             state.status = 'playing';
@@ -295,8 +304,8 @@
                     revealTimer = null;
                     broadcast();
                 }, MATCH_MS);
-            } else {
-                // mismatch: reveal, then flip back and pass the turn
+            } else if (revealMode === 'timed') {
+                // mismatch: reveal for a moment, then flip back and pass the turn
                 revealTimer = setTimeout(function () {
                     if (token !== restartToken) return;
                     state.cards[a].s = 'down';
@@ -305,7 +314,13 @@
                     state.current = nextPlayer(player);
                     revealTimer = null;
                     broadcast();
-                }, REVEAL_MS);
+                }, TIMED_REVEAL_MS);
+            } else {
+                // mismatch: the pair stays face-up until the next player clicks
+                state.flipped = [];
+                state.pending = [a, b];
+                state.current = nextPlayer(player);
+                broadcast();
             }
         }
     }
@@ -491,6 +506,17 @@
     }
 
 
+    // ---------- enlarged card view ----------
+    function openZoom(i) {
+        if (!state) return;
+        $('zoomImg').setAttribute('src', 'assets/' + String(state.cards[i].p).padStart(2, '0') + '.png');
+        $('zoom').hidden = false;
+    }
+
+    function closeZoom() {
+        $('zoom').hidden = true;
+    }
+
     // ---------- lobby panel helpers ----------
     function showPanelHome() {
         setupHome.hidden = false;
@@ -526,12 +552,20 @@
         const cardEl = ev.target.closest('.card');
         if (!cardEl || !state) return;
         const i = parseInt(cardEl.dataset.i, 10);
-        if (!isMyTurn() || state.cards[i].s !== 'down' || state.flipped.length >= 2) return;
+        const c = state.cards[i];
+        // clicking a face-up card opens the enlarged view instead of flipping
+        if (c.s === 'up' || c.s === 'matched') { openZoom(i); return; }
+        if (!isMyTurn() || c.s !== 'down' || state.flipped.length >= 2) return;
         if (mode === 'guest') {
             if (conn && conn.open) conn.send({ t: 'flip', i: i });
         } else {
             hostFlip(i, state.current);   // host / practice: play for the current player
         }
+    });
+
+    $('zoom').addEventListener('click', closeZoom);
+    document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape') closeZoom();
     });
 
     restartBtn.addEventListener('click', function () {
@@ -590,6 +624,16 @@
     });
 
     // ---------- init ----------
+    try {
+        const saved = localStorage.getItem('celuloks-reveal');
+        if (saved === 'timed' || saved === 'click') revealMode = saved;
+    } catch (e) { /* localStorage unavailable */ }
+    $('revealMode').value = revealMode;
+    $('revealMode').addEventListener('change', function () {
+        revealMode = $('revealMode').value;
+        try { localStorage.setItem('celuloks-reveal', revealMode); } catch (e) { /* ignore */ }
+    });
+
     showPanelHome();
     buildCards();
     restartBtn.disabled = true;

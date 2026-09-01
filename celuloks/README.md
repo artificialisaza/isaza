@@ -1,28 +1,47 @@
 # celuloks
 
-An online memory game for two players. Live at `https://www.isaza.xyz/celuloks/`
+An online memory game for 2 to 6 players. Live at `https://www.isaza.xyz/celuloks/`
 (once deployed to GitHub Pages).
 
 ## How to play
 
 1. One player opens the page and presses **create session** — a 5-character
-   code appears. Share it with your friend.
-2. The friend opens the same page, enters the code and presses **join**.
-3. Players alternate turns. On your turn, flip two cards:
+   code appears. Share it with up to 5 friends.
+2. Friends open the same page, enter the code and press **join**.
+   (You can also go to the board alone and let people join later.)
+3. The game starts — and the cronometer begins — when Player 1 flips the
+   first card. From that moment no new players can join.
+4. Players alternate turns. On your turn, flip two cards:
    - **Match** → the pair is yours (1 point) and you play again.
-   - **No match** → the cards flip back and the turn passes.
-4. When all 36 pairs are found, the player with the most pairs wins.
-   Press **restart** to reshuffle and start over. **exit** ends the session.
+   - **No match** → the turn passes to the next player. By default the missed
+     pair stays face-up until the next player clicks (so everyone gets a good
+     look at it); the host can change this in the home screen to flip back
+     after 3 seconds instead.
+5. Click any face-up or matched card to see it enlarged (click again or press
+   Esc to close).
+6. When all 36 pairs are found, the cronometer stops and the player with the
+   most pairs wins (the final time is shown too). Press **restart** to reshuffle
+   and start over. **exit** ends the session.
 
-There is also a **practice on this device** mode for testing without an opponent.
+The board always resizes to fit the screen — on a 13" laptop the full 9×8 grid
+is visible with no scrolling.
+
+There is also a **practice on this device** mode (1–6 simulated players) for
+testing without an opponent.
 
 ## Technical notes
 
 - Pure static files — no changes to the main site, no backend required.
 - Online play uses [PeerJS](https://peerjs.com) (WebRTC data channels) loaded
   from a CDN, with its free public broker for signaling. The host (Player 1)
-  holds the authoritative game state; the guest sends actions and receives
-  state updates, so both boards always stay in sync.
+  holds the authoritative game state; guests send actions and receive
+  state updates, so every board always stays in sync.
+- The board fits the viewport via a JS-computed `--cell` size, updated by a
+  `ResizeObserver` — all 8 rows are always visible.
+- The cronometer is started by the host on the first flip and broadcast with
+  each state update (guests interpolate locally between updates), so it shows
+  the same time for everyone.
+- If a player disconnects mid-game, their turns are skipped automatically.
 - If you self-host a PeerJS server someday, set it in `js/game.js` via the
   `Peer` options object (see PeerJS docs) — everything else stays the same.
 
@@ -36,6 +55,8 @@ placeholder is `assets/make_back_placeholder.py`.
 ## Files
 
 - `index.html` — page structure and lobby UI
-- `css/style.css` — layout, responsive 9×8 grid, flip animations
+- `css/style.css` — layout, responsive 9×8 grid, flip animations, zoom view
 - `js/game.js` — game logic and WebRTC session handling
-- `assets/01.png` … `36.png` — the 36 card faces (each used twice)
+- `assets/01.png` … `36.png` — the 36 card faces (each used twice, 810×810;
+  the print margins have been cropped out — originals are backed up outside
+  the repo)

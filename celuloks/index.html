@@ -53,6 +53,14 @@
                     </select>
                     <button class="big-btn ghost" id="practiceBtn">practice here</button>
                 </div>
+
+                <div class="setting-row">
+                    <label for="revealMode">flip a missed pair back</label>
+                    <select id="revealMode">
+                        <option value="click" selected>when the next player clicks</option>
+                        <option value="timed">after 3 seconds</option>
+                    </select>
+                </div>
             </div>
 
             <div id="setupWaiting" hidden>
@@ -66,6 +74,11 @@
 
             <div id="setupError" class="panel-error" hidden></div>
         </div>
+    </div>
+
+    <!-- enlarged card view -->
+    <div id="zoom" class="zoom" hidden>
+        <img id="zoomImg" alt="enlarged card" draggable="false">
     </div>
 
     <script src="js/game.js"></script>
