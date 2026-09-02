@@ -13,6 +13,7 @@
         <header class="topbar">
             <h1 class="game-title">celuloks</h1>
             <div class="timer" id="timer">0:00</div>
+            <div class="stat" id="flips">0 flips</div>
             <div class="hud" id="scores"></div>
             <div class="topbar-actions">
                 <button id="restartBtn" title="Reshuffle and reset the game">restart</button>
@@ -58,7 +59,16 @@
                     <label for="revealMode">flip a missed pair back</label>
                     <select id="revealMode">
                         <option value="click" selected>when the next player clicks</option>
-                        <option value="timed">after 3 seconds</option>
+                        <option value="1s">after 1 second</option>
+                        <option value="3s">after 3 seconds</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label for="deckSelect">deck</label>
+                    <select id="deckSelect">
+                        <option value="celuloks" selected>celulokos de darks</option>
+                        <option value="random">celulokos sin darks</option>
                     </select>
                 </div>
             </div>

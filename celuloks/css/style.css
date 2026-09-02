@@ -64,6 +64,17 @@ body {
     text-align: center;
 }
 
+.stat {
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 4px 10px;
+    white-space: nowrap;
+}
+
 .hud {
     display: flex;
     align-items: center;
@@ -149,7 +160,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(9, var(--cell));
+    grid-template-columns: repeat(var(--cols, 9), var(--cell));
     grid-auto-rows: var(--cell);
     gap: var(--gap);
 }
@@ -366,8 +377,9 @@ button { font-family: inherit; cursor: pointer; }
 .zoom[hidden] { display: none; }
 
 .zoom img {
-    max-width: min(88vmin, 720px);
-    max-height: 88vmin;
+    width: min(88vmin, 720px);
+    height: min(88vmin, 720px);
+    object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     user-select: none;
@@ -396,6 +408,7 @@ button { font-family: inherit; cursor: pointer; }
 @media (max-width: 560px) {
     .game-title { display: none; }
     .timer { font-size: 0.95rem; min-width: 60px; padding: 3px 8px; }
+    .stat { font-size: 0.7rem; padding: 3px 6px; }
     .topbar { gap: 6px; }
     .score { padding: 3px 6px; gap: 4px; }
     .score .pts { font-size: 0.85rem; }

@@ -8,10 +8,12 @@
     'use strict';
 
     // ---------- constants ----------
-    const TOTAL_PAIRS = 36;              // 36 images -> 72 cards
-    const COLS = 9, ROWS = 8;            // 9 x 8 grid
+    const DECKS = {
+        celuloks: { pairs: 36, cols: 9, rows: 8 },   // 72 cards, 9 x 8
+        random:   { pairs: 32, cols: 8, rows: 8 },   // 64 cards, 8 x 8
+    };
+    const REVEAL_DELAYS = { '1s': 1000, '3s': 3000 };
     const MAX_PLAYERS = 6;
-    const TIMED_REVEAL_MS = 3000;        // flip-back delay in 'timed' mode
     const MATCH_MS = 700;                // pause before matched cards settle
     const ROOM_PREFIX = 'celuloks-mg-';  // namespace on the public PeerJS broker
     const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
@@ -29,6 +31,7 @@
     const playerCountEl = $('playerCount');
     const banner = $('banner');
     const timerEl = $('timer');
+    const flipsEl = $('flips');
     const scoresEl = $('scores');
     const restartBtn = $('restartBtn');
     const exitBtn = $('exitBtn');
@@ -44,7 +47,9 @@
     let restartToken = 0;     // cancels pending timers after a restart
     let ticker = null;        // 100 ms cronometer display updater
     let sync = { elapsed: 0, at: 0 }; // guest: last cronometer sync from host
-    let revealMode = 'click'; // 'click': missed pair stays up until the next click; 'timed': flips back after 3s
+    let revealMode = 'click'; // 'click': missed pair stays up until the next click; '1s'/'3s': timed flip-back
+    let deckMode = 'celuloks'; // 'celuloks' | 'random' — chosen by the host on the home screen
+    let manifest = null;       // cached contents of assets/random/manifest.json
 
     // ---------- helpers ----------
     function randomCode(len) {
@@ -55,9 +60,9 @@
         return out;
     }
 
-    function shuffledDeck() {
+    function shuffledDeck(pairs) {
         const deck = [];
-        for (let p = 1; p <= TOTAL_PAIRS; p++) deck.push(p, p);
+        for (let p = 1; p <= pairs; p++) deck.push(p, p);
         for (let i = deck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -65,13 +70,20 @@
         return deck;
     }
 
-    function newState(playerCount) {
+    function newState(deck, files, playerCount) {
+        const d = DECKS[deck] || DECKS.celuloks;
         return {
-            cards: shuffledDeck().map((p) => ({ p: p, s: 'down' })), // s: down | up | matched
+            deck: deck,                     // 'celuloks' | 'random'
+            files: files || null,           // image filenames when deck is 'random'
+            pairs: d.pairs,
+            cols: d.cols,
+            rows: d.rows,
+            flips: 0,                       // two-card attempts made so far
+            cards: shuffledDeck(d.pairs).map((p) => ({ p: p, s: 'down' })), // s: down | up | matched
             flipped: [],                    // indices currently face-up
             current: 0,                     // whose turn (0-based)
-            scores: new Array(playerCount).fill(0),
-            playerCount: playerCount,
+            scores: new Array(playerCount || 1).fill(0),
+            playerCount: playerCount || 1,
             status: 'ready',                // ready | playing | ended
             pending: null,                  // indices of a missed pair kept face-up ('click' mode)
             revealMode: revealMode,         // host's flip-back setting, broadcast to guests
@@ -79,6 +91,11 @@
             elapsed: 0,                     // ms at the time of the last broadcast
             finalTime: null,                // ms, set when the last pair is made
         };
+    }
+
+    function cardSrcFor(c) {
+        if (state.deck === 'random') return 'assets/random/' + state.files[c.p - 1];
+        return 'assets/' + String(c.p).padStart(2, '0') + '.png';
     }
 
     function myPlayerIndex() {
@@ -134,23 +151,38 @@
     }
 
     // ---------- responsive board sizing (always fits, no scrolling) ----------
+    function gridDims() {
+        return state ? { cols: state.cols, rows: state.rows } : { cols: 9, rows: 8 };
+    }
+
     function resizeBoard() {
         const cw = boardWrap.clientWidth;
         const ch = boardWrap.clientHeight;
         if (cw <= 0 || ch <= 0) return;
+        const dims = gridDims();
         let gap = Math.round(Math.min(8, Math.max(2, cw * 0.006)));
-        let cell = Math.floor(Math.min((cw - 8 * gap) / COLS, (ch - 8 * gap) / ROWS));
+        let cell = Math.floor(Math.min((cw - (dims.cols - 1) * gap) / dims.cols,
+            (ch - (dims.rows - 1) * gap) / dims.rows));
         gap = Math.round(Math.min(10, Math.max(2, cell * 0.08))); // refine gap for the final cell size
-        cell = Math.floor(Math.min((cw - 8 * gap) / COLS, (ch - 8 * gap) / ROWS));
+        cell = Math.floor(Math.min((cw - (dims.cols - 1) * gap) / dims.cols,
+            (ch - (dims.rows - 1) * gap) / dims.rows));
         const root = document.documentElement.style;
         root.setProperty('--cell', Math.max(cell, 16) + 'px');
         root.setProperty('--gap', gap + 'px');
+        root.setProperty('--cols', String(dims.cols));
+    }
+
+    // rebuild the board if the session's grid dimensions changed
+    function ensureBoard() {
+        const dims = gridDims();
+        if (grid.children.length !== dims.cols * dims.rows) buildCards(dims.cols, dims.rows);
+        document.documentElement.style.setProperty('--cols', String(dims.cols));
     }
 
     // ---------- board rendering ----------
-    function buildCards() {
+    function buildCards(cols, rows) {
         grid.innerHTML = '';
-        for (let i = 0; i < COLS * ROWS; i++) {
+        for (let i = 0; i < cols * rows; i++) {
             const card = document.createElement('div');
             card.className = 'card';
             card.dataset.i = i;
@@ -182,13 +214,13 @@
 
     function render() {
         if (!state) return;
-        for (let i = 0; i < COLS * ROWS; i++) {
+        for (let i = 0; i < state.cols * state.rows; i++) {
             const card = grid.children[i];
             const c = state.cards[i];
             const cls = 'card' + (c.s === 'down' ? '' : ' ' + c.s);
             if (card.className !== cls) card.className = cls;
             const img = card.querySelector('.card-front img');
-            const src = 'assets/' + String(c.p).padStart(2, '0') + '.png';
+            const src = cardSrcFor(c);
             if (img.getAttribute('src') !== src) img.setAttribute('src', src);
         }
         renderHud();
@@ -219,6 +251,7 @@
         }
 
         restartBtn.disabled = mode === null;
+        flipsEl.textContent = state.flips + (state.flips === 1 ? ' flip' : ' flips');
 
         // status banner
         banner.classList.remove('win');
@@ -228,12 +261,15 @@
             for (let p = 0; p < state.playerCount; p++) {
                 if (state.scores[p] === max) winners.push(playerName(p));
             }
+            const totalPairs = state.scores.reduce(function (a, b) { return a + b; }, 0);
+            const eff = state.flips ? Math.round(100 * totalPairs / state.flips) : 0;
+            const stats = ' \u2014 ' + fmtTime(state.finalTime || 0) + ' \u2014 '
+                + state.flips + ' flips (' + eff + '% efficiency)';
             let msg;
             if (winners.length === 1) {
-                msg = winners[0] + ' wins! ' + state.scores.join(' \u2013 ') + ' \u2014 ' + fmtTime(state.finalTime || 0);
+                msg = winners[0] + ' wins! ' + state.scores.join(' \u2013 ') + stats;
             } else {
-                msg = 'It\u2019s a tie between ' + winners.join(' & ') + ' at ' + max
-                    + ' \u2014 ' + fmtTime(state.finalTime || 0);
+                msg = 'It\u2019s a tie between ' + winners.join(' & ') + ' at ' + max + stats;
             }
             showBanner(msg + ' \u2014 press restart to play again', true);
             updateTimerDisplay();
@@ -284,6 +320,7 @@
         broadcast();
 
         if (state.flipped.length === 2) {
+            state.flips += 1;   // one two-card attempt counted
             const a = state.flipped[0], b = state.flipped[1];
             const token = ++restartToken;
             if (state.cards[a].p === state.cards[b].p) {
@@ -304,7 +341,7 @@
                     revealTimer = null;
                     broadcast();
                 }, MATCH_MS);
-            } else if (revealMode === 'timed') {
+            } else if (revealMode !== 'click') {
                 // mismatch: reveal for a moment, then flip back and pass the turn
                 revealTimer = setTimeout(function () {
                     if (token !== restartToken) return;
@@ -314,7 +351,7 @@
                     state.current = nextPlayer(player);
                     revealTimer = null;
                     broadcast();
-                }, TIMED_REVEAL_MS);
+                }, REVEAL_DELAYS[revealMode] || 3000);
             } else {
                 // mismatch: the pair stays face-up until the next player clicks
                 state.flipped = [];
@@ -339,8 +376,34 @@
         if (!state) return;
         restartToken++;
         if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
-        state = newState(state.playerCount);
+        // a random deck re-picks its 32 images for every new game
+        const files = state.deck === 'random' && manifest ? pickRandomFiles() : state.files;
+        state = newState(state.deck, files, state.playerCount);
+        ensureBoard();
         broadcast();
+    }
+
+    function pickRandomFiles() {
+        const pool = (manifest.images || []).slice();
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        return pool.slice(0, DECKS.random.pairs);
+    }
+
+    // resolve the selected deck, loading the random deck's manifest if needed
+    async function prepareDeck() {
+        if (deckMode !== 'random') return { deck: 'celuloks', files: null };
+        if (!manifest) {
+            const res = await fetch('assets/random/manifest.json');
+            if (!res.ok) throw new Error('manifest');
+            manifest = await res.json();
+        }
+        if (!manifest.images || manifest.images.length < DECKS.random.pairs) {
+            throw new Error('not enough images');
+        }
+        return { deck: 'random', files: pickRandomFiles() };
     }
 
     function broadcast() {
@@ -354,7 +417,7 @@
 
 
     // ---------- networking (PeerJS) ----------
-    function startHost() {
+    function startHost(deck, files) {
         mode = 'host';
         myIndex = 0;
         showPanelWaiting();
@@ -364,8 +427,10 @@
         peer.on('open', function () {
             showPanelWaiting();
             roomCodeEl.textContent = code;
-            state = state || newState(1);
+            state = state || newState(deck, files, 1);
             updateLobbyCount();
+            ensureBoard();
+            resizeBoard();
             render();
         });
 
@@ -464,6 +529,8 @@
         } else if (msg.t === 'state' && msg.s) {
             state = msg.s;
             sync = { elapsed: state.elapsed || 0, at: Date.now() };
+            ensureBoard();
+            resizeBoard();
             if (state.status === 'playing' || state.status === 'ended') startTicker();
             render();
         }
@@ -479,11 +546,12 @@
         overlay.hidden = false;
     }
 
-    function startPractice() {
+    function startPractice(deck, files) {
         mode = 'practice';
         myIndex = 0;
         const n = Math.min(MAX_PLAYERS, Math.max(1, parseInt($('practiceCount').value, 10) || 2));
-        state = newState(n);
+        state = newState(deck, files, n);
+        ensureBoard();
         overlay.hidden = true;
         resizeBoard();
         render();
@@ -495,7 +563,8 @@
         mode = null;
         state = null;
         myIndex = 0;
-        buildCards();   // fresh board for the next session
+        buildCards(9, 8);   // fresh default board for the next session
+        document.documentElement.style.setProperty('--cols', '9');
         overlay.hidden = false;
         showPanelHome();
         banner.textContent = '\u00a0';
@@ -509,7 +578,7 @@
     // ---------- enlarged card view ----------
     function openZoom(i) {
         if (!state) return;
-        $('zoomImg').setAttribute('src', 'assets/' + String(state.cards[i].p).padStart(2, '0') + '.png');
+        $('zoomImg').setAttribute('src', cardSrcFor(state.cards[i]));
         $('zoom').hidden = false;
     }
 
@@ -578,13 +647,21 @@
 
     exitBtn.addEventListener('click', exitSession);
 
-    $('createBtn').addEventListener('click', function () {
+    $('createBtn').addEventListener('click', async function () {
         if (typeof Peer === 'undefined') {
             showSetupError('Could not load the networking library. Check your internet connection and reload.');
             return;
         }
         cleanupConnection();
-        startHost();
+        try {
+            const sel = await prepareDeck();
+            startHost(sel.deck, sel.files);
+        } catch (e) {
+            showSetupError(e.message === 'not enough images'
+                ? 'The random deck needs at least ' + DECKS.random.pairs
+                    + ' images \u2014 add more to random_images/ and run prepare_deck.py.'
+                : 'Could not load the random deck (assets/random/manifest.json).');
+        }
     });
 
     $('joinBtn').addEventListener('click', function () {
@@ -602,7 +679,18 @@
         if (ev.key === 'Enter') $('joinBtn').click();
     });
 
-    $('practiceBtn').addEventListener('click', startPractice);
+    $('practiceBtn').addEventListener('click', async function () {
+        cleanupConnection();
+        try {
+            const sel = await prepareDeck();
+            startPractice(sel.deck, sel.files);
+        } catch (e) {
+            showSetupError(e.message === 'not enough images'
+                ? 'The random deck needs at least ' + DECKS.random.pairs
+                    + ' images \u2014 add more to random_images/ and run prepare_deck.py.'
+                : 'Could not load the random deck (assets/random/manifest.json).');
+        }
+    });
 
     $('closeLobbyBtn').addEventListener('click', function () {
         overlay.hidden = true;
@@ -625,19 +713,27 @@
 
     // ---------- init ----------
     try {
-        const saved = localStorage.getItem('celuloks-reveal');
-        if (saved === 'timed' || saved === 'click') revealMode = saved;
+        const savedReveal = localStorage.getItem('celuloks-reveal');
+        if (savedReveal === 'click' || savedReveal === '1s' || savedReveal === '3s') revealMode = savedReveal;
+        const savedDeck = localStorage.getItem('celuloks-deck');
+        if (savedDeck === 'celuloks' || savedDeck === 'random') deckMode = savedDeck;
     } catch (e) { /* localStorage unavailable */ }
     $('revealMode').value = revealMode;
     $('revealMode').addEventListener('change', function () {
         revealMode = $('revealMode').value;
         try { localStorage.setItem('celuloks-reveal', revealMode); } catch (e) { /* ignore */ }
     });
+    $('deckSelect').value = deckMode;
+    $('deckSelect').addEventListener('change', function () {
+        deckMode = $('deckSelect').value;
+        try { localStorage.setItem('celuloks-deck', deckMode); } catch (e) { /* ignore */ }
+    });
 
     showPanelHome();
-    buildCards();
+    ensureBoard();
     restartBtn.disabled = true;
     timerEl.textContent = '0:00';
+    flipsEl.textContent = '0 flips';
     resizeBoard();
     if (typeof ResizeObserver !== 'undefined') {
         new ResizeObserver(resizeBoard).observe(boardWrap);
