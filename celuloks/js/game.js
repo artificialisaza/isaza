@@ -10,7 +10,7 @@
     // ---------- constants ----------
     const DECKS = {
         celuloks: { pairs: 36, cols: 9, rows: 8 },   // 72 cards, 9 x 8
-        random:   { pairs: 32, cols: 8, rows: 8 },   // 64 cards, 8 x 8
+        random:   { pairs: 36, cols: 9, rows: 8 },   // 72 cards, 9 x 8
     };
     const REVEAL_DELAYS = { '1s': 1000, '3s': 3000 };
     const MAX_PLAYERS = 6;

@@ -30,8 +30,8 @@ The home screen has a deck selector (chosen by the host, remembered in the
 browser):
 
 - **celulokos de darks** — the original 36 images, 72 cards on a 9×8 grid.
-- **random selection** — 32 images picked at random each game from
-  `random_images/`, 64 cards on an 8×8 grid. Restart picks 32 new ones.
+- **random selection** — 36 images picked at random each game from
+  `random_images/`, also 72 cards on a 9×8 grid. Restart picks 36 new ones.
 
 The board resizes itself to fit either grid — all rows are always visible
 with no scrolling.
