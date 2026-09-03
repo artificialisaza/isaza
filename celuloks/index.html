@@ -38,7 +38,7 @@
                 <button class="big-btn" id="createBtn">create session</button>
                 <div class="divider">or</div>
                 <div class="join-row">
-                    <input id="joinCode" maxlength="5" placeholder="CODE" autocomplete="off" spellcheck="false">
+                    <input id="joinCode" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false">
                     <button class="big-btn" id="joinBtn">join</button>
                 </div>
                 <div class="divider">or</div>
@@ -67,8 +67,7 @@
                 <div class="setting-row">
                     <label for="deckSelect">deck</label>
                     <select id="deckSelect">
-                        <option value="celuloks" selected>celulokos de darks</option>
-                        <option value="random">celulokos sin darks</option>
+                        <option value="darks" selected>celulokos de darks</option>
                     </select>
                 </div>
             </div>
@@ -76,6 +75,10 @@
             <div id="setupWaiting" hidden>
                 <p class="panel-label">share this code with your friends:</p>
                 <div class="code-display" id="roomCode" title="click to copy">·····</div>
+                <div class="share-row">
+                    <input id="inviteLink" readonly placeholder="invite link">
+                    <button class="big-btn ghost" id="copyInviteBtn">copy</button>
+                </div>
                 <p class="panel-note" id="playerCount">waiting for players to join…</p>
                 <button class="big-btn ghost" id="closeLobbyBtn">go to the board</button>
                 <p class="panel-note small">the game starts when you flip the first card —

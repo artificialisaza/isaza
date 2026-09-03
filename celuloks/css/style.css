@@ -209,9 +209,16 @@ button { font-family: inherit; cursor: pointer; }
 
 .card.matched { cursor: default; animation: matched-pop 0.35s ease; }
 
-.card.matched .card-inner {
-    box-shadow: 0 0 0 2px var(--accent);
+/* face-up (unmatched) cards: green outline + outer glow so they stand out */
+.card.up {
     border-radius: 6px;
+    box-shadow: 0 0 0 2px #56c98a, 0 0 16px 4px rgba(86, 201, 138, 0.55);
+}
+
+/* matched pairs keep the golden ring */
+.card.matched {
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px var(--accent);
 }
 
 @keyframes matched-pop {
@@ -398,6 +405,28 @@ button { font-family: inherit; cursor: pointer; }
     cursor: pointer;
     user-select: all;
 }
+
+/* invite link row */
+.share-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.share-row input {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg);
+    border: 1px solid #3a4050;
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 10px;
+    outline: none;
+    text-overflow: ellipsis;
+}
+
+.share-row .big-btn { width: auto; padding: 10px 16px; font-size: 0.8rem; }
 
 .panel-note { color: var(--muted); font-size: 0.82rem; margin-top: 14px; }
 .panel-note.small { font-size: 0.72rem; opacity: 0.8; }

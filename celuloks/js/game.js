@@ -8,11 +8,17 @@
     'use strict';
 
     // ---------- constants ----------
-    const DECKS = {
-        celuloks: { pairs: 36, cols: 9, rows: 8 },   // 72 cards, 9 x 8
-        random:   { pairs: 36, cols: 9, rows: 8 },   // 72 cards, 9 x 8
+    const GAME_SIZE = { pairs: 36, cols: 9, rows: 8 };   // 72 cards, 9 x 8
+    const DEFAULT_DECK = 'darks';
+    // used if assets/decks.json cannot be loaded
+    const FALLBACK_DECKS = {
+        darks: { name: 'celulokos de darks' },
+        random: { name: 'celulokos sin darks' },
+        new_perspective: { name: 'A new perspective' },
     };
     const REVEAL_DELAYS = { '1s': 1000, '3s': 3000 };
+    const MIX_ID = 'mix';
+    const MIX_NAME = 'celulokos mezclados';   // pools images from every deck
     const MAX_PLAYERS = 6;
     const MATCH_MS = 700;                // pause before matched cards settle
     const ROOM_PREFIX = 'celuloks-mg-';  // namespace on the public PeerJS broker
@@ -48,8 +54,10 @@
     let ticker = null;        // 100 ms cronometer display updater
     let sync = { elapsed: 0, at: 0 }; // guest: last cronometer sync from host
     let revealMode = 'click'; // 'click': missed pair stays up until the next click; '1s'/'3s': timed flip-back
-    let deckMode = 'celuloks'; // 'celuloks' | 'random' — chosen by the host on the home screen
-    let manifest = null;       // cached contents of assets/random/manifest.json
+    let deckMode = DEFAULT_DECK; // deck id, chosen by the host on the home screen
+    let decks = null;            // deck registry loaded from assets/decks.json
+    let manifests = {};          // per-deck cached manifest.json contents
+    let builtSig = null;         // signature of the board currently in the DOM
 
     // ---------- helpers ----------
     function randomCode(len) {
@@ -70,16 +78,17 @@
         return deck;
     }
 
-    function newState(deck, files, playerCount) {
-        const d = DECKS[deck] || DECKS.celuloks;
+    function newState(deck, files, back, playerCount) {
         return {
-            deck: deck,                     // 'celuloks' | 'random'
-            files: files || null,           // image filenames when deck is 'random'
-            pairs: d.pairs,
-            cols: d.cols,
-            rows: d.rows,
+            deck: deck,                     // deck id ('darks', 'random', ...)
+            files: files,                   // image filenames for this game
+            back: back || 'back.png',       // card-back filename inside the deck folder
+            pairs: GAME_SIZE.pairs,
+            cols: GAME_SIZE.cols,
+            rows: GAME_SIZE.rows,
             flips: 0,                       // two-card attempts made so far
-            cards: shuffledDeck(d.pairs).map((p) => ({ p: p, s: 'down' })), // s: down | up | matched
+            justShuffled: false,            // one-shot: flip cards down without animation
+            cards: shuffledDeck(GAME_SIZE.pairs).map((p) => ({ p: p, s: 'down' })), // s: down | up | matched
             flipped: [],                    // indices currently face-up
             current: 0,                     // whose turn (0-based)
             scores: new Array(playerCount || 1).fill(0),
@@ -94,8 +103,12 @@
     }
 
     function cardSrcFor(c) {
-        if (state.deck === 'random') return 'assets/random/' + state.files[c.p - 1];
-        return 'assets/' + String(c.p).padStart(2, '0') + '.png';
+        return 'assets/' + state.files[c.p - 1];   // files are "<deck>/<file>" paths
+    }
+
+    function backSrcFor() {
+        if (state && state.back) return 'assets/' + state.back;
+        return 'assets/' + DEFAULT_DECK + '/back.png';
     }
 
     function myPlayerIndex() {
@@ -175,7 +188,12 @@
     // rebuild the board if the session's grid dimensions changed
     function ensureBoard() {
         const dims = gridDims();
-        if (grid.children.length !== dims.cols * dims.rows) buildCards(dims.cols, dims.rows);
+        const back = backSrcFor();
+        const sig = (dims.cols * dims.rows) + '|' + back;
+        if (builtSig !== sig) {
+            buildCards(dims.cols, dims.rows);
+            builtSig = sig;
+        }
         document.documentElement.style.setProperty('--cols', String(dims.cols));
     }
 
@@ -193,7 +211,7 @@
             const back = document.createElement('div');
             back.className = 'card-face card-back';
             const backImg = document.createElement('img');
-            backImg.src = 'assets/back.png';
+            backImg.setAttribute('src', backSrcFor());
             backImg.alt = 'card back';
             backImg.draggable = false;
             back.appendChild(backImg);
@@ -214,6 +232,29 @@
 
     function render() {
         if (!state) return;
+        if (state.justShuffled) {
+            // restart: snap everything face-down with no animation, then swap
+            // the images while nothing is visible, and re-enable transitions
+            state.justShuffled = false;   // handle once per client
+            for (let i = 0; i < state.cols * state.rows; i++) {
+                const el = grid.children[i];
+                el.querySelector('.card-inner').style.transition = 'none';
+                el.className = 'card';
+                el.querySelector('.card-front img').setAttribute('src', cardSrcFor(state.cards[i]));
+            }
+            const raf = typeof requestAnimationFrame === 'function'
+                ? requestAnimationFrame
+                : function (f) { setTimeout(f, 34); };
+            raf(function () {
+                raf(function () {
+                    for (let i = 0; i < state.cols * state.rows; i++) {
+                        grid.children[i].querySelector('.card-inner').style.transition = '';
+                    }
+                });
+            });
+            renderHud();
+            return;
+        }
         for (let i = 0; i < state.cols * state.rows; i++) {
             const card = grid.children[i];
             const c = state.cards[i];
@@ -372,38 +413,96 @@
         return from;
     }
 
-    function hostRestart() {
+    async function hostRestart() {
         if (!state) return;
         restartToken++;
         if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
-        // a random deck re-picks its 32 images for every new game
-        const files = state.deck === 'random' && manifest ? pickRandomFiles() : state.files;
-        state = newState(state.deck, files, state.playerCount);
-        ensureBoard();
+        try {
+            const sel = await prepareDeck();   // same deck, fresh random pick
+            state = newState(sel.deck, sel.files, sel.back, state.playerCount);
+        } catch (e) {
+            // keep the same images if the deck cannot be re-resolved
+            state = newState(state.deck, state.files, state.back, state.playerCount);
+        }
+        state.justShuffled = true;
         broadcast();
     }
 
-    function pickRandomFiles() {
-        const pool = (manifest.images || []).slice();
+    async function loadDecks() {
+        if (decks) return;
+        try {
+            const res = await fetch('assets/decks.json');
+            if (res.ok) decks = await res.json();
+        } catch (e) { /* offline or file:// — fall back below */ }
+        if (!decks || typeof decks !== 'object' || !Object.keys(decks).length) decks = FALLBACK_DECKS;
+        const sel = $('deckSelect');
+        sel.innerHTML = '';
+        Object.keys(decks).forEach(function (id) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = decks[id].name || id;
+            sel.appendChild(opt);
+        });
+        // the mix mode pools images from every registered deck
+        const mixOpt = document.createElement('option');
+        mixOpt.value = MIX_ID;
+        mixOpt.textContent = MIX_NAME;
+        sel.appendChild(mixOpt);
+        try {
+            const saved = localStorage.getItem('celuloks-deck');
+            if (saved && (decks[saved] || saved === MIX_ID)) deckMode = saved;
+        } catch (e) { /* ignore */ }
+        sel.value = (decks[deckMode] || deckMode === MIX_ID) ? deckMode : DEFAULT_DECK;
+    }
+
+    async function ensureManifest(id) {
+        if (!manifests[id]) {
+            const res = await fetch('assets/' + id + '/manifest.json');
+            if (!res.ok) throw new Error('manifest');
+            manifests[id] = await res.json();
+        }
+        return manifests[id];
+    }
+
+    function pickRandomFrom(list, n) {
+        const pool = list.slice();
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [pool[i], pool[j]] = [pool[j], pool[i]];
         }
-        return pool.slice(0, DECKS.random.pairs);
+        return pool.slice(0, n);
     }
 
-    // resolve the selected deck, loading the random deck's manifest if needed
+    // resolve the selected deck (or a mix of all decks) into files + back
     async function prepareDeck() {
-        if (deckMode !== 'random') return { deck: 'celuloks', files: null };
-        if (!manifest) {
-            const res = await fetch('assets/random/manifest.json');
-            if (!res.ok) throw new Error('manifest');
-            manifest = await res.json();
+        await loadDecks();
+        if (deckMode === MIX_ID) {
+            const pool = [];
+            const backs = [];
+            const ids = Object.keys(decks);
+            for (let i = 0; i < ids.length; i++) {
+                const m = await ensureManifest(ids[i]);
+                (m.images || []).forEach(function (f) { pool.push(ids[i] + '/' + f); });
+                backs.push(ids[i] + '/' + (m.back || 'back.png'));
+            }
+            if (pool.length < GAME_SIZE.pairs) throw new Error('not enough images');
+            return {
+                deck: MIX_ID,
+                files: pickRandomFrom(pool, GAME_SIZE.pairs),
+                back: backs[Math.floor(Math.random() * backs.length)],
+            };
         }
-        if (!manifest.images || manifest.images.length < DECKS.random.pairs) {
+        if (!decks[deckMode]) deckMode = DEFAULT_DECK;
+        const m = await ensureManifest(deckMode);
+        if (!m.images || m.images.length < GAME_SIZE.pairs) {
             throw new Error('not enough images');
         }
-        return { deck: 'random', files: pickRandomFiles() };
+        return {
+            deck: deckMode,
+            files: pickRandomFrom(m.images, GAME_SIZE.pairs)
+                .map(function (f) { return deckMode + '/' + f; }),
+            back: deckMode + '/' + (m.back || 'back.png'),
+        };
     }
 
     function broadcast() {
@@ -417,21 +516,25 @@
 
 
     // ---------- networking (PeerJS) ----------
-    function startHost(deck, files) {
+    function startHost(deck, files, back) {
         mode = 'host';
         myIndex = 0;
         showPanelWaiting();
-        const code = randomCode(5);
+        const code = randomCode(4);
         peer = new Peer(ROOM_PREFIX + code, { debug: 1 });
 
         peer.on('open', function () {
             showPanelWaiting();
             roomCodeEl.textContent = code;
-            state = state || newState(deck, files, 1);
+            state = state || newState(deck, files, back, 1);
             updateLobbyCount();
             ensureBoard();
             resizeBoard();
             render();
+            // shareable invite link
+            if (typeof location !== 'undefined' && location.href) {
+                $('inviteLink').value = location.href.split('?')[0] + '?join=' + code;
+            }
         });
 
         peer.on('connection', function (c) {
@@ -546,11 +649,11 @@
         overlay.hidden = false;
     }
 
-    function startPractice(deck, files) {
+    function startPractice(deck, files, back) {
         mode = 'practice';
         myIndex = 0;
         const n = Math.min(MAX_PLAYERS, Math.max(1, parseInt($('practiceCount').value, 10) || 2));
-        state = newState(deck, files, n);
+        state = newState(deck, files, back, n);
         ensureBoard();
         overlay.hidden = true;
         resizeBoard();
@@ -563,6 +666,7 @@
         mode = null;
         state = null;
         myIndex = 0;
+        builtSig = null;
         buildCards(9, 8);   // fresh default board for the next session
         document.documentElement.style.setProperty('--cols', '9');
         overlay.hidden = false;
@@ -655,18 +759,18 @@
         cleanupConnection();
         try {
             const sel = await prepareDeck();
-            startHost(sel.deck, sel.files);
+            startHost(sel.deck, sel.files, sel.back);
         } catch (e) {
             showSetupError(e.message === 'not enough images'
-                ? 'The random deck needs at least ' + DECKS.random.pairs
-                    + ' images \u2014 add more to random_images/ and run prepare_deck.py.'
-                : 'Could not load the random deck (assets/random/manifest.json).');
+                ? 'This deck needs at least ' + GAME_SIZE.pairs
+                    + ' images \u2014 add more to its folder in deck_sources/ and run prepare_deck.py.'
+                : 'Could not load this deck (its manifest.json is missing).');
         }
     });
 
     $('joinBtn').addEventListener('click', function () {
         const code = $('joinCode').value.trim().toUpperCase();
-        if (code.length < 4) { showSetupError('Enter the 5-character session code.'); return; }
+        if (code.length < 3) { showSetupError('Enter the session code.'); return; }
         if (typeof Peer === 'undefined') {
             showSetupError('Could not load the networking library. Check your internet connection and reload.');
             return;
@@ -683,12 +787,23 @@
         cleanupConnection();
         try {
             const sel = await prepareDeck();
-            startPractice(sel.deck, sel.files);
+            startPractice(sel.deck, sel.files, sel.back);
         } catch (e) {
             showSetupError(e.message === 'not enough images'
-                ? 'The random deck needs at least ' + DECKS.random.pairs
-                    + ' images \u2014 add more to random_images/ and run prepare_deck.py.'
-                : 'Could not load the random deck (assets/random/manifest.json).');
+                ? 'This deck needs at least ' + GAME_SIZE.pairs
+                    + ' images \u2014 add more to its folder in deck_sources/ and run prepare_deck.py.'
+                : 'Could not load this deck (its manifest.json is missing).');
+        }
+    });
+
+    $('copyInviteBtn').addEventListener('click', function () {
+        const link = $('inviteLink').value;
+        if (link && navigator.clipboard) {
+            navigator.clipboard.writeText(link);
+            const btn = $('copyInviteBtn');
+            const prev = btn.textContent;
+            btn.textContent = 'copied!';
+            setTimeout(function () { btn.textContent = prev; }, 1500);
         }
     });
 
@@ -715,19 +830,17 @@
     try {
         const savedReveal = localStorage.getItem('celuloks-reveal');
         if (savedReveal === 'click' || savedReveal === '1s' || savedReveal === '3s') revealMode = savedReveal;
-        const savedDeck = localStorage.getItem('celuloks-deck');
-        if (savedDeck === 'celuloks' || savedDeck === 'random') deckMode = savedDeck;
     } catch (e) { /* localStorage unavailable */ }
     $('revealMode').value = revealMode;
     $('revealMode').addEventListener('change', function () {
         revealMode = $('revealMode').value;
         try { localStorage.setItem('celuloks-reveal', revealMode); } catch (e) { /* ignore */ }
     });
-    $('deckSelect').value = deckMode;
     $('deckSelect').addEventListener('change', function () {
         deckMode = $('deckSelect').value;
         try { localStorage.setItem('celuloks-deck', deckMode); } catch (e) { /* ignore */ }
     });
+    loadDecks();
 
     showPanelHome();
     ensureBoard();
@@ -735,6 +848,12 @@
     timerEl.textContent = '0:00';
     flipsEl.textContent = '0 flips';
     resizeBoard();
+
+    // auto-join when opened through an invite link (?join=CODE)
+    if (typeof location !== 'undefined' && location.search) {
+        const m = location.search.match(/[?&]join=([A-Za-z0-9]{3,8})/);
+        if (m) joinGame(m[1].toUpperCase());
+    }
     if (typeof ResizeObserver !== 'undefined') {
         new ResizeObserver(resizeBoard).observe(boardWrap);
     } else {
