@@ -37,7 +37,7 @@ browser). Every deck is a subfolder of `assets/` with its own card faces,
 - **celulokos de darks** (`assets/darks/`) — the original 36 images.
 - **celulokos sin darks** (`assets/random/`) — 36 images picked at random
   each game from its own pool; restart picks 36 new ones.
-- **A new perspective** (`assets/new_perspective/`) — the newest deck.
+- **La última frontera** (`assets/new_perspective/`) — the newest deck.
 - **celulokos mezclados** — 36 images drawn at random from **all** the decks
   above, mixing cards from different decks; the card back is also picked at
   random. New decks you add later are included automatically.

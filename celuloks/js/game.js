@@ -14,7 +14,7 @@
     const FALLBACK_DECKS = {
         darks: { name: 'celulokos de darks' },
         random: { name: 'celulokos sin darks' },
-        new_perspective: { name: 'A new perspective' },
+        new_perspective: { name: 'La \u00faltima frontera' },
     };
     const REVEAL_DELAYS = { '1s': 1000, '3s': 3000 };
     const MIX_ID = 'mix';

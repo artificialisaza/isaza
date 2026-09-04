@@ -34,7 +34,7 @@ EXTS = ('.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif', '.bmp', '.tif', '.tif
 DECK_NAMES = {
     'darks': 'celulokos de darks',
     'random': 'celulokos sin darks',
-    'new_perspective': 'A new perspective',
+    'new_perspective': 'La \u00faltima frontera',
 }
 
 
