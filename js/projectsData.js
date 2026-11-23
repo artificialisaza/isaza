@@ -51,7 +51,7 @@ const projects = [
   {
     id: "sereno",
     year: 2022,
-    title: { en: "sereno (serene wind)", es: "Sereno" },
+    title: { en: "serene wind", es: "Sereno" },
     meta: { en: "2022 · fiction short film", es: "2022 · cortometraje de ficción" },
     image: "assets/images/webp/SE_STILL_1.webp",
     link: "projects/lorem-film.html",
