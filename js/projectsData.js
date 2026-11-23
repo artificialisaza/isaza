@@ -1,5 +1,20 @@
 // Centralized project data for dynamic rendering and translation
 const projects = [
+    {
+    id: "no_conozcas",
+    year: 2026,
+    title: {
+      en: "Don't Know Yourself",
+      es: "No te conozcas"
+    },
+    meta: {
+      en: "2026 · experimental short film",
+      es: "2026 · cortometraje experimental"
+    },
+    image: "assets/images/ntc_still_3.jpg",
+    link: "projects/no_conozcas.html",
+    tags: ["film"]
+  },
   {
     id: "reyno",
     year: 2025,
