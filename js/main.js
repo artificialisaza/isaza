@@ -224,6 +224,7 @@ function saveScrollPosition() {
   if (!isIndexPage()) return;
   saveCurrentTabScroll();
   persistActiveTab();
+  persistTagFilter();
 }
 
 function restoreScrollPosition() {
@@ -249,6 +250,7 @@ function createProjectCard(project, lang) {
   const card = document.createElement('a');
   card.href = project.link;
   card.className = 'project-link';
+  card.setAttribute('data-project-id', project.id);
 
   const projectItem = document.createElement('div');
   projectItem.className = 'project-item';
@@ -276,6 +278,67 @@ function createProjectCard(project, lang) {
 }
 
 // --- Dynamic Project Rendering ---
+// Update the text of already-rendered project cards in place. Used on language
+// switches: rebuilding the list would collapse the page to 3 cards first (the
+// rest are appended async), which clamps the scroll and causes a visible jump.
+// In-place updates keep DOM order, images, heights and scroll fully unchanged.
+function updateProjectCardTexts(lang) {
+  const cards = document.querySelectorAll('#project-list .project-link[data-project-id]');
+  // Expected number of cards for the active filter. If the list isn't fully
+  // rendered yet (async append still pending) or hasn't been rendered at all,
+  // fall back to a full re-render so no cards are left in the old language.
+  const expected = activeTagFilter
+    ? projects.filter(p => p.tags && p.tags.includes(activeTagFilter)).length
+    : projects.length;
+  if (cards.length === 0 || cards.length !== expected) return false;
+  cards.forEach(card => {
+    const project = projects.find(p => p.id === card.getAttribute('data-project-id'));
+    if (!project) return;
+    const titleEl = card.querySelector('h3');
+    const metaEl = card.querySelector('.project-meta');
+    if (titleEl) titleEl.textContent = project.title[lang];
+    if (metaEl) metaEl.textContent = project.meta[lang];
+  });
+  return true;
+}
+
+// --- Tag filter persistence ---
+// The active tag filter ("selected works" / "all" / "film" / "exhibition" /
+// "video") is saved so a visitor who opens a project and comes back returns
+// to the same filtered view (same tag + same scroll position).
+const KNOWN_TAG_FILTERS = ['selected', 'film', 'exhibition', 'video'];
+
+function restoreTagFilter() {
+  const saved = localStorage.getItem('projectTagFilter');
+  if (saved === 'all') {
+    activeTagFilter = null;
+    return;
+  }
+  if (saved && KNOWN_TAG_FILTERS.indexOf(saved) !== -1) {
+    activeTagFilter = saved;
+    return;
+  }
+  activeTagFilter = 'selected';
+}
+
+function persistTagFilter() {
+  try {
+    localStorage.setItem('projectTagFilter', activeTagFilter === null ? 'all' : activeTagFilter);
+  } catch (e) {}
+}
+
+function syncTagButtonState() {
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+  let target = null;
+  if (activeTagFilter !== null) {
+    target = document.querySelector('.tag-btn[data-tag="' + activeTagFilter + '"]');
+  }
+  if (!target) {
+    target = document.querySelector('.tag-btn[data-tag="all"]');
+  }
+  if (target) target.classList.add('active');
+}
+
 function renderProjects(lang, tagFilter, restoreTarget) {
   if (typeof projects === 'undefined') return;
   let sorted = projects.slice().sort((a, b) => b.year - a.year);
@@ -337,17 +400,22 @@ function getCurrentLanguage() {
   return localStorage.getItem('selectedLanguage') || 'en';
 }
 
-// Patch language switching to re-render projects
+// Patch language switching to update the project list.
+// Only a full re-render is needed before the list has ever been rendered; on an
+// actual language toggle the already-rendered cards are updated in place so the
+// page never collapses to a partial list (avoids the scroll jump when scrolled
+// down inside the projects tab).
 const origSetLanguage = window.setLanguage;
 window.setLanguage = function(lang) {
   if (typeof origSetLanguage === 'function') origSetLanguage(lang);
-  // Keep the current scroll position intact while re-rendering projects
-  const scrollNow = window.pageYOffset || document.documentElement.scrollTop || 0;
-  renderProjects(getCurrentLanguage(), activeTagFilter, scrollNow);
   updateTagLabels(lang);
   // Update abstract toggle labels to current language
   if (typeof window.refreshAbstractToggleLabels === 'function') {
     window.refreshAbstractToggleLabels(lang);
+  }
+  if (!updateProjectCardTexts(lang)) {
+    const scrollNow = window.pageYOffset || document.documentElement.scrollTop || 0;
+    renderProjects(getCurrentLanguage(), activeTagFilter, scrollNow);
   }
 };
 
@@ -361,6 +429,10 @@ function updateTagLabels(lang) {
 document.addEventListener('DOMContentLoaded', function() {
   const lang = getCurrentLanguage();
   updateTagLabels(lang);
+
+  // Bring back the last used tag filter (persisted across project-page visits)
+  restoreTagFilter();
+  syncTagButtonState();
 
   // Reopen the tab that was active when the visitor navigated away
   // (default projects; used when returning from a project page via back/forward)
@@ -386,8 +458,8 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         activeTagFilter = tag;
       }
-      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
+      syncTagButtonState();
+      persistTagFilter();
       // Start the new filter list at the top
       renderProjects(getCurrentLanguage(), activeTagFilter, 0);
     });
@@ -412,10 +484,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // Listen for localStorage changes (e.g., language change in another tab or after navigation)
 window.addEventListener('storage', function(e) {
   if (e.key === 'selectedLanguage') {
-    const scrollNow = window.pageYOffset || document.documentElement.scrollTop || 0;
-    renderProjects(getCurrentLanguage(), activeTagFilter, scrollNow);
+    const lang = getCurrentLanguage();
+    updateTagLabels(lang);
     if (typeof window.refreshAbstractToggleLabels === 'function') {
-      window.refreshAbstractToggleLabels(getCurrentLanguage());
+      window.refreshAbstractToggleLabels(lang);
+    }
+    if (!updateProjectCardTexts(lang)) {
+      const scrollNow = window.pageYOffset || document.documentElement.scrollTop || 0;
+      renderProjects(lang, activeTagFilter, scrollNow);
     }
   }
 }); 
