@@ -35,9 +35,15 @@
         <!-- Projects Tab Content -->
         <section id="projects" class="tab-content active">
             <div class="tag-filter-nav">
-                <button class="tag-btn" data-tag="film" data-label-en="film" data-label-es="cine">film</button>
-                <button class="tag-btn" data-tag="exhibition" data-label-en="exhibition" data-label-es="exhibiciones">exhibition</button>
-                <button class="tag-btn" data-tag="video" data-label-en="video" data-label-es="video">video</button>
+                <div class="tag-filter-group tag-filter-group-left">
+                    <button class="tag-btn active" data-tag="selected" data-label-en="selected works" data-label-es="obras seleccionadas">selected works</button>
+                    <button class="tag-btn" data-tag="all" data-label-en="all" data-label-es="todas">all</button>
+                </div>
+                <div class="tag-filter-group">
+                    <button class="tag-btn" data-tag="film" data-label-en="film" data-label-es="cine">film</button>
+                    <button class="tag-btn" data-tag="exhibition" data-label-en="exhibition" data-label-es="exhibiciones">exhibition</button>
+                    <button class="tag-btn" data-tag="video" data-label-en="video" data-label-es="video">video</button>
+                </div>
             </div>
             <div class="project-list" id="project-list"></div>
         </section>

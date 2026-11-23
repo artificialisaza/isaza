@@ -1,29 +1,38 @@
 // Tab Switching Functionality
-document.addEventListener('DOMContentLoaded', function() {
+// switchTab is global so it can also be reused to restore the last active tab on load
+function switchTab(tabName) {
     const tabButtons = document.querySelectorAll('.section-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
-    // Function to switch tabs
-    function switchTab(tabName) {
-        // Remove active class from all tabs and contents
-        tabButtons.forEach(button => button.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
+    // Remove active class from all tabs and contents
+    tabButtons.forEach(button => button.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
 
-        // Add active class to selected tab and content
-        const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
-        const activeContent = document.getElementById(tabName);
-        
-        if (activeButton && activeContent) {
-            activeButton.classList.add('active');
-            activeContent.classList.add('active');
-        }
+    // Add active class to selected tab and content
+    const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+    const activeContent = document.getElementById(tabName);
+
+    if (activeButton && activeContent) {
+        activeButton.classList.add('active');
+        activeContent.classList.add('active');
     }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.section-btn');
 
     // Add click event listeners to tab buttons
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const tabName = this.getAttribute('data-tab');
+            if (tabName === currentTab) return;
+
+            // Remember the scroll position of the tab we are leaving
+            saveCurrentTabScroll();
             switchTab(tabName);
+            currentTab = tabName;
+            persistActiveTab();
+
             // If publications tab is activated, update language for abstracts after DOM update
             if (tabName === 'publications') {
                 setTimeout(() => {
@@ -42,6 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }, 0);
             }
+
+            // Restore the destination tab's own scroll position
+            // (top on first visit, remembered position afterwards)
+            requestAnimationFrame(() => restoreScrollTo(currentTab));
         });
     });
 
@@ -168,30 +181,55 @@ document.addEventListener('keydown', function(event) {
     }
 }); 
 
-// --- Scroll Position Memory ---
+// --- Tab-scoped Scroll Position Memory ---
+// Each tab (projects / publications / bio) keeps its own scroll position, so
+// switching tabs lands you where you left off in that tab (top on first visit).
+// The active tab + its position are also persisted so returning from a project
+// page (browser back/forward) restores the same tab & spot.
+const tabScrollPositions = {};
+let currentTab = 'projects';
+let activeTagFilter = 'selected';
+let projectRenderToken = 0;
+
+function isIndexPage() {
+  return window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+}
+
+function getSavedTabScroll(tab) {
+  if (tab in tabScrollPositions) return tabScrollPositions[tab];
+  const saved = parseInt(localStorage.getItem('indexScrollPosition_' + tab) || '', 10);
+  return isNaN(saved) ? 0 : saved;
+}
+
+function saveCurrentTabScroll() {
+  if (!currentTab) return;
+  const pos = window.pageYOffset || document.documentElement.scrollTop || 0;
+  tabScrollPositions[currentTab] = pos;
+  try {
+    localStorage.setItem('indexScrollPosition_' + currentTab, pos.toString());
+  } catch (e) {}
+}
+
+function persistActiveTab() {
+  try {
+    localStorage.setItem('indexActiveTab', currentTab);
+  } catch (e) {}
+}
+
+function restoreScrollTo(tab) {
+  window.scrollTo(0, getSavedTabScroll(tab));
+}
+
 function saveScrollPosition() {
-  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    localStorage.setItem('indexScrollPosition', scrollPosition.toString());
-  }
+  if (!isIndexPage()) return;
+  saveCurrentTabScroll();
+  persistActiveTab();
 }
 
 function restoreScrollPosition() {
-  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-    const savedPosition = localStorage.getItem('indexScrollPosition');
-    if (savedPosition) {
-      // Wait for content to load, then restore position
-      setTimeout(() => {
-        window.scrollTo(0, parseInt(savedPosition));
-        // Clean up the saved position after restoring
-        localStorage.removeItem('indexScrollPosition');
-      }, 100);
-    }
-  }
+  if (!isIndexPage()) return;
+  restoreScrollTo(currentTab);
 }
-
-let projectRenderToken = 0;
-let activeTagFilter = null;
 
 function preloadTopProjectImages(projectsToPreload) {
   document.querySelectorAll('link[data-project-preload="true"]').forEach(link => link.remove());
@@ -238,7 +276,7 @@ function createProjectCard(project, lang) {
 }
 
 // --- Dynamic Project Rendering ---
-function renderProjects(lang, tagFilter) {
+function renderProjects(lang, tagFilter, restoreTarget) {
   if (typeof projects === 'undefined') return;
   let sorted = projects.slice().sort((a, b) => b.year - a.year);
 
@@ -261,6 +299,13 @@ function renderProjects(lang, tagFilter) {
     container.appendChild(createProjectCard(project, lang));
   });
 
+  // restoreTarget: a number scrolls to an exact pixel (e.g. 0 for a new filter),
+  // anything else restores the saved position of the currently visible tab.
+  const applyScroll = () => {
+    const target = (typeof restoreTarget === 'number') ? restoreTarget : getSavedTabScroll(currentTab);
+    window.scrollTo(0, target);
+  };
+
   const appendRemainingProjects = () => {
     if (currentRenderToken !== projectRenderToken) return;
 
@@ -272,11 +317,11 @@ function renderProjects(lang, tagFilter) {
       container.appendChild(fragment);
     }
 
-    restoreScrollPosition();
+    applyScroll();
   };
 
   if (remainingProjects.length === 0) {
-    restoreScrollPosition();
+    applyScroll();
     return;
   }
 
@@ -296,7 +341,9 @@ function getCurrentLanguage() {
 const origSetLanguage = window.setLanguage;
 window.setLanguage = function(lang) {
   if (typeof origSetLanguage === 'function') origSetLanguage(lang);
-  renderProjects(getCurrentLanguage(), activeTagFilter);
+  // Keep the current scroll position intact while re-rendering projects
+  const scrollNow = window.pageYOffset || document.documentElement.scrollTop || 0;
+  renderProjects(getCurrentLanguage(), activeTagFilter, scrollNow);
   updateTagLabels(lang);
   // Update abstract toggle labels to current language
   if (typeof window.refreshAbstractToggleLabels === 'function') {
@@ -314,29 +361,41 @@ function updateTagLabels(lang) {
 document.addEventListener('DOMContentLoaded', function() {
   const lang = getCurrentLanguage();
   updateTagLabels(lang);
-  renderProjects(lang, activeTagFilter);
 
-  // Tag filter buttons
+  // Reopen the tab that was active when the visitor navigated away
+  // (default projects; used when returning from a project page via back/forward)
+  const activeBtn = document.querySelector('.section-btn.active');
+  const htmlDefaultTab = activeBtn ? activeBtn.getAttribute('data-tab') : 'projects';
+  const savedTab = localStorage.getItem('indexActiveTab');
+  const initialTab = (savedTab && document.getElementById(savedTab)) ? savedTab : htmlDefaultTab;
+  if (initialTab !== htmlDefaultTab) {
+    switchTab(initialTab);
+  }
+  currentTab = initialTab;
+
+  renderProjects(lang, activeTagFilter);
+  // Make sure the restored tab lands on its remembered position
+  requestAnimationFrame(() => restoreScrollPosition());
+
+  // Tag filter buttons: "selected works" (default), "all", film, exhibition, video
   document.querySelectorAll('.tag-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const tag = this.getAttribute('data-tag');
-      if (activeTagFilter === tag) {
-        // Deactivate: show all
+      if (tag === 'all') {
         activeTagFilter = null;
-        this.classList.remove('active');
       } else {
-        // Activate this tag
         activeTagFilter = tag;
-        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
       }
-      renderProjects(getCurrentLanguage(), activeTagFilter);
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      // Start the new filter list at the top
+      renderProjects(getCurrentLanguage(), activeTagFilter, 0);
     });
   });
   
-  // Add scroll position memory for navigation
-  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-    // Save scroll position before navigating away
+  // Add per-tab scroll position memory for navigation
+  if (isIndexPage()) {
+    // Save scroll position before navigating away (e.g. opening a project)
     document.addEventListener('click', function(e) {
       const link = e.target.closest('a');
       if (link && link.href && link.href.includes('projects/')) {
@@ -344,15 +403,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    // Also save on beforeunload for browser back/forward
+    // Also save on beforeunload/pagehide for browser back/forward
     window.addEventListener('beforeunload', saveScrollPosition);
+    window.addEventListener('pagehide', saveScrollPosition);
   }
 });
 
 // Listen for localStorage changes (e.g., language change in another tab or after navigation)
 window.addEventListener('storage', function(e) {
   if (e.key === 'selectedLanguage') {
-    renderProjects(getCurrentLanguage(), activeTagFilter);
+    const scrollNow = window.pageYOffset || document.documentElement.scrollTop || 0;
+    renderProjects(getCurrentLanguage(), activeTagFilter, scrollNow);
     if (typeof window.refreshAbstractToggleLabels === 'function') {
       window.refreshAbstractToggleLabels(getCurrentLanguage());
     }

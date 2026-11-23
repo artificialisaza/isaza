@@ -13,7 +13,7 @@ const projects = [
     },
     image: "assets/images/ntc_still_3.jpg",
     link: "projects/no_conozcas.html",
-    tags: ["film"]
+    tags: ["film","selected"]
   },
   {
     id: "reyno",
@@ -28,7 +28,7 @@ const projects = [
     },
     image: "assets/images/webp/Quadro_lowres_11nov.webp",
     link: "projects/reyno.html",
-    tags: ["exhibition"]
+    tags: ["exhibition","selected"]
   },
   {
     id: "being_water",
@@ -46,7 +46,7 @@ const projects = [
     meta: { en: "2022 · transmedia project", es: "2022 · proyecto transmedia" },
     image: "assets/images/webp/LAST_FRAME_01.webp",
     link: "projects/last_run.html",
-    tags: ["exhibition", "film"]
+    tags: ["exhibition", "film","selected"]
   },
   {
     id: "sereno",
@@ -55,7 +55,7 @@ const projects = [
     meta: { en: "2022 · fiction short film", es: "2022 · cortometraje de ficción" },
     image: "assets/images/webp/SE_STILL_1.webp",
     link: "projects/lorem-film.html",
-    tags: ["film"]
+    tags: ["film","selected"]
   },
   {
     id: "santas_postales",
@@ -120,6 +120,6 @@ const projects = [
     meta: { en: "2017 · fiction short film", es: "2017 · cortometraje de ficción" },
     image: "assets/images/webp/MB Still 2.webp",
     link: "projects/medias_blancas.html",
-    tags: ["film"]
+    tags: ["film","selected"]
   }
 ]; 

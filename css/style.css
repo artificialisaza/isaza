@@ -213,7 +213,15 @@ body {
     flex-direction: row;
     gap: 0.6rem;
     margin-top: 0.2rem;
-    justify-content: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Left group ("selected works" / "all") and right group (film / exhibition / video) */
+.tag-filter-group {
+    display: flex;
+    flex-direction: row;
+    gap: 0.6rem;
     flex-wrap: wrap;
 }
 
@@ -245,6 +253,9 @@ body {
 
 @media (max-width: 600px) {
     .tag-filter-nav {
+        gap: 0.4rem;
+    }
+    .tag-filter-group {
         gap: 0.4rem;
     }
     .tag-btn {
