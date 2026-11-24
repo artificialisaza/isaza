@@ -232,19 +232,57 @@ function restoreScrollPosition() {
   restoreScrollTo(currentTab);
 }
 
-function preloadTopProjectImages(projectsToPreload) {
-  document.querySelectorAll('link[data-project-preload="true"]').forEach(link => link.remove());
+// --- Image preloading ---
+// The "selected works" thumbnails are always preloaded first, from top to bottom
+// (same order they appear in the default view), so they are the very first image
+// requests the browser makes. Preloads for other filters are added afterwards
+// and never evict the selected-works preloads.
+function getSortedProjectsByTag(tagFilter) {
+  if (typeof projects === 'undefined') return [];
+  const list = tagFilter ? projects.filter(p => p.tags && p.tags.includes(tagFilter)) : projects.slice();
+  // Stable sort by year (newest first); equal years keep the original order
+  return list.sort((a, b) => b.year - a.year);
+}
 
-  projectsToPreload.forEach(project => {
-    const preloadLink = document.createElement('link');
-    preloadLink.rel = 'preload';
-    preloadLink.as = 'image';
-    preloadLink.href = project.image;
-    preloadLink.setAttribute('fetchpriority', 'high');
-    preloadLink.setAttribute('data-project-preload', 'true');
-    document.head.appendChild(preloadLink);
+function addProjectPreload(url, isSelected, priority) {
+  if (!url || !document.head) return;
+  const existing = document.querySelector('link[data-project-preload][href="' + url + '"]');
+  if (existing) return;
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = url;
+  if (priority === 'high') link.setAttribute('fetchpriority', 'high');
+  if (isSelected) link.setAttribute('data-selected-preload', 'true');
+  link.setAttribute('data-project-preload', 'true');
+  document.head.appendChild(link);
+}
+
+function removeNonSelectedPreloads() {
+  document.querySelectorAll('link[data-project-preload="true"]').forEach(link => {
+    if (!link.hasAttribute('data-selected-preload')) link.remove();
   });
 }
+
+// First to load: every "selected works" image, in list order (top to bottom).
+// The first three get fetchpriority="high" (they sit above the fold).
+function preloadSelectedWorksImages() {
+  getSortedProjectsByTag('selected').forEach((project, idx) => {
+    addProjectPreload(project.image, true, idx < 3 ? 'high' : 'auto');
+  });
+}
+
+// Preloads the top of the currently visible filter, keeping the selected-works
+// preloads in place (so they stay the first requests issued).
+function preloadTopProjectImages(projectsToPreload) {
+  removeNonSelectedPreloads();
+  projectsToPreload.forEach(project => addProjectPreload(project.image, false, 'high'));
+}
+
+// Run as early as possible (main.js executes at the end of <body>, before the
+// browser's first paint), so the selected works are requested before anything
+// else renders.
+preloadSelectedWorksImages();
 
 function createProjectCard(project, lang) {
   const card = document.createElement('a');
@@ -341,12 +379,7 @@ function syncTagButtonState() {
 
 function renderProjects(lang, tagFilter, restoreTarget) {
   if (typeof projects === 'undefined') return;
-  let sorted = projects.slice().sort((a, b) => b.year - a.year);
-
-  // Apply tag filter
-  if (tagFilter) {
-    sorted = sorted.filter(p => p.tags && p.tags.includes(tagFilter));
-  }
+  let sorted = getSortedProjectsByTag(tagFilter);
 
   const topProjects = sorted.slice(0, 3);
   const remainingProjects = sorted.slice(3);

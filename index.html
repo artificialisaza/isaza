@@ -8,8 +8,9 @@
     <link rel="dns-prefetch" href="//www.youtube.com">
     <!-- System font stack — no external font requests -->
     <link rel="stylesheet" href="css/style.css?v=1.1">
-    <!-- Only preload the one above-the-fold critical image -->
-    <link rel="preload" href="assets/images/webp/Quadro_lowres_11nov.webp" as="image" type="image/webp" fetchpriority="high">
+    <!-- Project images are preloaded dynamically by js/main.js — the "selected works"
+         thumbnails always load first, top to bottom, so they're the first image
+         requests the browser makes. -->
 </head>
 <body>
     <!-- Header -->
